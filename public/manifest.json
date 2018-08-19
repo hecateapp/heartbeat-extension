@@ -1,0 +1,37 @@
+{
+    "manifest_version": 2,
+    "name": "Hecate Heartbeat",
+    "version": "1.0.0",
+    "description": "TODO",
+    "icons": {
+        "16": "hecate-icon.png",
+        "32": "hecate-icon.png",
+        "48": "hecate-icon.png",
+        "128": "hecate-icon.png"
+    },
+    "browser_action": {
+        "default_popup": "index.html",
+        "default_title": "Open Hecate popup",
+        "default_icon": {
+            "16": "hecate-icon.png",
+            "32": "hecate-icon.png",
+            "48": "hecate-icon.png",
+            "128": "hecate-icon.png"
+        }
+    },
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_scripts": [{
+        "matches": ["https://github.com/*"],
+        "include_globs": ["*github.com/*/*/pull/*"],
+        "js": ["github.js"]
+    }], 
+    "permissions": [
+        "declarativeContent",
+        "https://github.com/",
+        "https://api.hecate.co/",
+        "http://localhost:4567/*"
+    ]
+}
