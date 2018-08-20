@@ -1,29 +1,19 @@
 import * as React from "react";
 
+import { logView } from "../util/api";
+
 interface IPullRequestOverlayProps {
   prPath: string;
 }
 
 class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
-    componentDidMount() {
-        fetch("http://localhost:4567/heartbeat/view", {
-            method: "POST",
-            body: JSON.stringify({
-                pr_path: this.props.prPath,
-            })
-        }).then(resp => {
-            if(!resp.ok) {
-                throw new Error(resp.status.toString());
-            }
-            return resp.json()
-        }).then(resp => {
-            console.log(resp);
-        })
-    }
+  componentDidMount() {
+    logView(this.props.prPath).then(r => console.log(r));
+  }
 
-    render() {
-        return <h1 style={{ color: "red" }}>{this.props.prPath}</h1>;
-    }
+  render() {
+    return <h1 style={{ color: "red" }}>{this.props.prPath}</h1>;
+  }
 }
 
 export default PullRequestOverlay;
