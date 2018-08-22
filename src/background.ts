@@ -8,6 +8,9 @@ chrome.runtime.onInstalled.addListener(() => {
     const prPath = port.name;
     if (!prs.has(prPath)) {
       prs.set(prPath, null);
+    } else {
+      const msg: BackgroundRatingMessage = { rating: prs.get(prPath) };
+      port.postMessage(msg);
     }
 
     const cancel = prs.observe((change) => {
