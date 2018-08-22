@@ -27,9 +27,12 @@
         "matches": ["https://github.com/*"],
         "include_globs": ["*github.com/*/*/pull/*"],
         "js": ["github.js"]
-    }], 
+    }],
+    "web_accessible_resources": [
+        "*.js.map"
+    ],
     "permissions": [
-        "declarativeContent",
+        "storage",
         "https://github.com/",
         "https://api.hecate.co/",
         "http://localhost:4567/*"

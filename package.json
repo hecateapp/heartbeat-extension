@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "mobx": "^5.0.3",
+    "mobx-react": "^5.2.5",
     "react": "^16.4.2",
     "react-dom": "^16.4.2"
   },
