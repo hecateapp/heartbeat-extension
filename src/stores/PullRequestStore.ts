@@ -1,5 +1,6 @@
 import { decorate, observable, action, runInAction } from "mobx";
 import { UIRatingMessage, BackgroundRatingMessage } from "../util/types";
+import { logView } from "../util/api";
 
 class PullRequestStore {
     private port: chrome.runtime.Port;
@@ -10,8 +11,9 @@ class PullRequestStore {
     public requestInProgress: boolean = false;
     public requestError: string | undefined;
 
-    constructor(prPath: string) {
+    public loadRating(prPath: string) {
         this.prPath = prPath;
+        this.requestInProgress = true;
         this.port = chrome.runtime.connect({name: this.prPath});
         this.port.onMessage.addListener(this.ratingCallback.bind(this));
     }
@@ -40,6 +42,7 @@ decorate(PullRequestStore, {
     requestInProgress: observable,
     requestError: observable,
     
+    loadRating: action,
     setRating: action,
     ratingCallback: action,
 });

@@ -8,6 +8,7 @@ import { SFC } from "react";
 
 interface IPullRequestOverlayProps {
   pullRequestStore?: PullRequestStore;
+  prPath: string;
 }
 
 const RatingRadioButton: SFC<{
@@ -25,6 +26,10 @@ const RatingRadioButton: SFC<{
 );
 
 class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
+  componentDidMount() {
+    this.props.pullRequestStore && this.props.pullRequestStore.loadRating(this.props.prPath);
+  }
+
   handleRating(e: React.ChangeEvent<HTMLInputElement>) {
     const rating = parseInt(e.target.value, 10);
     console.log(rating);
@@ -41,7 +46,7 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
 
     return (
       <div style={{ backgroundColor: "grey", border: "solid 2px red" }}>
-        <h3>Hecate Heartbeat Rating</h3>
+        <h3>💓🥁</h3>
         <div>
           😠
           <RatingRadioButton

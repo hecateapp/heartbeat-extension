@@ -7,9 +7,7 @@ import PullRequestStore from "./stores/PullRequestStore";
 
 import PullRequestOverlay from "./components/PullRequestOverlay";
 
-const prPath = location.pathname;
-
-const pullRequestStore = new PullRequestStore(prPath);
+const pullRequestStore = new PullRequestStore();
 
 configureMobx({
   enforceActions: true
@@ -24,9 +22,11 @@ div.style.position = "fixed";
 div.style.top = "0";
 div.style.right = "0";
 
+const prPath = location.pathname;
+
 ReactDOM.render(
   <Provider {...stores}>
-    <PullRequestOverlay />
+    <PullRequestOverlay prPath={prPath} />
   </Provider>,
   div
 );

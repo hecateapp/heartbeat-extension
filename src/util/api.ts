@@ -6,7 +6,7 @@ interface IRequestOptions {
 
 const apiHost = "http://localhost:4567";
 
-const fetchJson = (path: string, options: IRequestOptions = {}) : Promise<JSON> => {
+const fetchJson = (path: string, options: IRequestOptions = {}) : Promise<any> => {
   return fetch(`${apiHost}${path}`, {
     ...options,
     headers: {
@@ -23,7 +23,7 @@ const fetchJson = (path: string, options: IRequestOptions = {}) : Promise<JSON> 
     });
 };
 
-export const logView = (prPath: string) : Promise<JSON> => {
+export const logView = (prPath: string) : Promise<{rating: number}> => {
     return fetchJson("/heartbeat/view", {
         body: JSON.stringify({"pr_path": prPath,})
     });
