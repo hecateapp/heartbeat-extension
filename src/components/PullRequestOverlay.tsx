@@ -45,7 +45,7 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
     }
 
     return (
-      <div style={{ backgroundColor: "grey", border: "solid 2px red" }}>
+      <div style={{ backgroundColor: "grey", border: "solid 2px red", padding: "0.2em 0.4em" }}>
         <h3>💓🥁</h3>
         <div>
           😠

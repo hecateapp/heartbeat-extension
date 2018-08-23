@@ -5,4 +5,5 @@ export interface UIRatingMessage {
 
 export interface BackgroundRatingMessage {
     rating: number;
+    error?: any;
 }

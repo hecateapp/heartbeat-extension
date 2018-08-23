@@ -27,8 +27,16 @@ chrome.runtime.onInstalled.addListener(() => {
       prs.set(msg.prPath, msg.rating);
     });
 
-    logView(prPath).then(resp => {
-      prs.set(prPath, resp.rating);
-    });
+    logView(prPath)
+      .then(resp => {
+        prs.set(prPath, resp.rating);
+      })
+      .catch(reason => {
+        const msg: BackgroundRatingMessage = {
+          rating: prs.get(prPath),
+          error: reason
+        };
+        port.postMessage(msg);
+      });
   });
 });

@@ -25,6 +25,7 @@ const fetchJson = (path: string, options: IRequestOptions = {}) : Promise<any> =
 
 export const logView = (prPath: string) : Promise<{rating: number}> => {
     return fetchJson("/heartbeat/view", {
+        method: "POST",
         body: JSON.stringify({"pr_path": prPath,})
     });
 }
