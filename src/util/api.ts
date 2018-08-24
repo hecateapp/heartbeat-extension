@@ -4,43 +4,42 @@ interface IRequestOptions {
   body?: string;
 }
 
-// TODO something
-const apiHost = "http://localhost:4567";
-const apiToken = "api_key_testing";
+export default class API {
+  constructor(token: string) {
+    this.apiToken = token;
+  }
 
-const fetchJson = (
-  path: string,
-  options: IRequestOptions = {}
-): Promise<any> => {
-  return fetch(`${apiHost}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Token token="${apiToken}"`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...options.headers
-    }
-  }).then(resp => {
-    if (!resp.ok) {
-      throw new Error(resp.status.toString());
-    }
-    return resp.json();
-  });
-};
+  private apiToken: string;
+  private apiHost: string = "http://localhost:4567";
 
-export const logView = (prPath: string): Promise<{ rating: number }> => {
-  return fetchJson("/heartbeat/view", {
-    method: "POST",
-    body: JSON.stringify({ pr_path: prPath })
-  });
-};
+  private fetchJson(path: string, options: IRequestOptions = {}): Promise<any> {
+    return fetch(`${this.apiHost}${path}`, {
+      ...options,
+      headers: {
+        Authorization: `Token token="${this.apiToken}"`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...options.headers
+      }
+    }).then(resp => {
+      if (!resp.ok) {
+        throw new Error(resp.status.toString());
+      }
+      return resp.json();
+    });
+  }
 
-export const setRating = (
-  prPath: string,
-  rating: number
-): Promise<{ rating: number }> => {
-  return fetchJson("/heartbeat/set_rating", {
-    method: "POST",
-    body: JSON.stringify({ pr_path: prPath, rating: rating })
-  });
-};
+  logView(prPath: string): Promise<{ rating: number }> {
+    return this.fetchJson("/heartbeat/view", {
+      method: "POST",
+      body: JSON.stringify({ pr_path: prPath })
+    });
+  }
+
+  setRating(prPath: string, rating: number): Promise<{ rating: number }> {
+    return this.fetchJson("/heartbeat/set_rating", {
+      method: "POST",
+      body: JSON.stringify({ pr_path: prPath, rating: rating })
+    });
+  }
+}

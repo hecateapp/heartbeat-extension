@@ -1,8 +1,10 @@
 import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
 import { ObservableMap, observe } from "mobx";
-import { logView, setRating } from "./util/api";
+import API from "./util/api";
 
 chrome.runtime.onInstalled.addListener(() => {
+  const api = new API("api_key_testing");
+  
   const prs: ObservableMap<string, number> = new ObservableMap();
 
   chrome.runtime.onConnect.addListener(port => {
@@ -24,7 +26,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
     port.onMessage.addListener((msg: UIRatingMessage) => {
       console.log("got msg", msg);
-      setRating(msg.prPath, msg.rating).then(resp => {
+      api.setRating(msg.prPath, msg.rating).then(resp => {
         console.log(resp);
         prs.set(msg.prPath, resp.rating);
       }).catch(reason => {
@@ -37,7 +39,7 @@ chrome.runtime.onInstalled.addListener(() => {
       });
     });
 
-    logView(prPath)
+    api.logView(prPath)
       .then(resp => {
         console.log(resp);
         prs.set(prPath, resp.rating);

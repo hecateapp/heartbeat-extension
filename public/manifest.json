@@ -34,7 +34,7 @@
     "permissions": [
         "storage",
         "https://github.com/",
-        "https://api.hecate.co/",
+        "https://*.hecate.co/",
         "http://localhost:4567/*"
     ]
 }
