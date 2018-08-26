@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Hecate Heartbeat",
-    "version": "1.0.0",
-    "description": "TODO",
+    "version": "0.0.1",
+    "description": "Adds a rating widget to all GitHub pull requests so you can give each PR a score for tracking team progress over time.",
     "icons": {
         "16": "hecate-icon.png",
         "32": "hecate-icon.png",
@@ -10,7 +10,7 @@
         "128": "hecate-icon.png"
     },
     "browser_action": {
-        "default_popup": "index.html",
+        "default_popup": "popup.html",
         "default_title": "Open Hecate popup",
         "default_icon": {
             "16": "hecate-icon.png",
@@ -18,6 +18,10 @@
             "48": "hecate-icon.png",
             "128": "hecate-icon.png"
         }
+    },
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": false
     },
     "background": {
         "scripts": ["background.js"],
@@ -34,7 +38,6 @@
     "permissions": [
         "storage",
         "https://github.com/",
-        "https://*.hecate.co/",
-        "http://localhost:4567/*"
+        "https://*.hecate.co/"
     ]
 }

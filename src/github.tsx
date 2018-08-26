@@ -33,4 +33,3 @@ ReactDOM.render(
 );
 
 document.body.appendChild(div);
-console.log("heartbeat included on pr");

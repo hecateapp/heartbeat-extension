@@ -1,2 +1,4 @@
 dist/
 node_modules/
+dist.pem
+dist.crx

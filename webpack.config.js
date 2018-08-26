@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         popup: "./src/popup.tsx",
         background: "./src/background.ts",
-        github: "./src/github.tsx"
+        github: "./src/github.tsx",
+        options: "./src/options.tsx"
     },
     output: {
         filename: "[name].js",

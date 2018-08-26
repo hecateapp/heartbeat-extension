@@ -48,7 +48,6 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
 
   handleRating(e: React.ChangeEvent<HTMLInputElement>) {
     const rating = parseInt(e.target.value, 10);
-    console.log(rating);
     if (rating !== this.props.pullRequestStore.rating) {
       this.props.pullRequestStore &&
         this.props.pullRequestStore.setRating(rating);

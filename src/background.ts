@@ -1,11 +1,21 @@
 import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
 import { ObservableMap, observe } from "mobx";
-import API from "./util/api";
+import { setRating, logView } from "./util/api";
 
 chrome.runtime.onInstalled.addListener(() => {
-  const api = new API("api_key_testing");
-  
   const prs: ObservableMap<string, number> = new ObservableMap();
+
+  let apiKey: string;
+  chrome.storage.sync.get("apiKey", items => {
+    apiKey = items.apiKey;
+  });
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "sync") {
+      if (changes.apiKey) {
+        apiKey = changes.apiKey.newValue;
+      }
+    }
+  });
 
   chrome.runtime.onConnect.addListener(port => {
     const prPath = port.name;
@@ -14,7 +24,6 @@ chrome.runtime.onInstalled.addListener(() => {
     }
 
     const cancel = prs.observe(change => {
-      console.log("change", change);
       if (change.type === "update" && change.name === prPath) {
         const msg: BackgroundRatingMessage = { rating: change.newValue };
         port.postMessage(msg);
@@ -25,23 +34,21 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 
     port.onMessage.addListener((msg: UIRatingMessage) => {
-      console.log("got msg", msg);
-      api.setRating(msg.prPath, msg.rating).then(resp => {
-        console.log(resp);
-        prs.set(msg.prPath, resp.rating);
-      }).catch(reason => {
-        console.log("error set rating", reason);
-        const msg: BackgroundRatingMessage = {
-          rating: prs.get(prPath),
-          error: reason
-        };
-        port.postMessage(msg);
-      });
+      setRating(apiKey, msg.prPath, msg.rating)
+        .then(resp => {
+          prs.set(msg.prPath, resp.rating);
+        })
+        .catch(reason => {
+          const msg: BackgroundRatingMessage = {
+            rating: prs.get(prPath),
+            error: reason
+          };
+          port.postMessage(msg);
+        });
     });
 
-    api.logView(prPath)
+    logView(apiKey, prPath)
       .then(resp => {
-        console.log(resp);
         prs.set(prPath, resp.rating);
       })
       .catch(reason => {

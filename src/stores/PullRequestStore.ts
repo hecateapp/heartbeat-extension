@@ -28,11 +28,9 @@ class PullRequestStore {
   }
 
   public ratingCallback(msg: BackgroundRatingMessage) {
-    console.log("received message", msg);
     this.rating = msg.rating;
     this.requestInProgress = false;
     if (msg.error) {
-      console.log("error sending rating", msg.error);
       this.requestError = "error saving rating";
     }
   }
@@ -41,13 +39,13 @@ class PullRequestStore {
     runInAction(() => {
       this.port = chrome.runtime.connect({ name: this.prPath });
       this.port.onMessage.addListener(this.ratingCallback.bind(this));
-    })
-    
+    });
+
     this.port.onDisconnect.addListener(() => {
       runInAction(() => {
         this.port = null;
         this.connectPort();
-      })
+      });
     });
   }
 
