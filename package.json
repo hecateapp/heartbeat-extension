@@ -22,7 +22,8 @@
     "webpack-command": "^0.4.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode development"
+    "build": "webpack --config webpack.config.js --mode development",
+    "release": "webpack --config webpack.config.js --mode production && zip -r release.zip dist/*"
   },
   "author": "",
   "license": "ISC"
