@@ -3,7 +3,7 @@ import { ObservableMap } from "mobx";
 import { setRating, logView } from "./util/api";
 
 const prs: ObservableMap<string, number> = new ObservableMap();
-const ports: chrome.runtime.Port[] = [];
+const ports: chrome.runtime.Port[] = []; 
 
 let apiKey: string;
 chrome.storage.sync.get("apiKey", items => {
@@ -19,6 +19,7 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 });
 
 chrome.runtime.onConnect.addListener(port => {
+  console.log("New port connected", port.name);
   ports.push(port);
   const prPath = port.name;
   if (!prs.has(prPath)) {

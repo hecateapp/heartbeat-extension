@@ -9,7 +9,6 @@ import TitlePanel from "./TitlePanel";
 
 interface IPullRequestOverlayProps {
   pullRequestStore?: PullRequestStore;
-  prPath: string;
 }
 
 const RatingContainer = styled.div`
@@ -41,11 +40,6 @@ const RatingContainer = styled.div`
 `;
 
 class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
-  componentDidMount() {
-    this.props.pullRequestStore &&
-      this.props.pullRequestStore.loadRating(this.props.prPath);
-  }
-
   handleRating(e: React.ChangeEvent<HTMLInputElement>) {
     const rating = parseInt(e.target.value, 10);
     if (rating !== this.props.pullRequestStore.rating) {
@@ -55,8 +49,8 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
   }
 
   render() {
-    if (!this.props.pullRequestStore) {
-      return <p>Loading...</p>;
+    if (!this.props.pullRequestStore || !this.props.pullRequestStore.prPath) {
+      return null;
     }
 
     return (

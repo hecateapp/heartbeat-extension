@@ -1,6 +1,8 @@
 import { decorate, observable, action, runInAction } from "mobx";
 import { UIRatingMessage, BackgroundRatingMessage } from "../util/types";
 
+const prPathRegex = /^\/[\w-]+\/[\w-]+\/pull\/\d+/i;
+
 class PullRequestStore {
   private port: chrome.runtime.Port;
 
@@ -10,10 +12,20 @@ class PullRequestStore {
   public requestInProgress: boolean = false;
   public requestError: string | undefined;
 
-  public loadRating(prPath: string) {
-    this.prPath = prPath;
-    this.requestInProgress = true;
-    this.connectPort();
+  public navigateTo(path: string) {
+    console.log("in navigate to with", path)
+    if (path.match(prPathRegex)) {
+      console.log("definitely a PR");
+      this.prPath = path;
+      this.requestInProgress = true;
+      this.connectPort();
+    } else {
+      if (this.prPath) {
+        this.prPath = null;
+        this.port.disconnect();
+        this.port = null;
+      }
+    }
   }
 
   public setRating(rating: number) {
@@ -58,11 +70,12 @@ class PullRequestStore {
 }
 
 decorate(PullRequestStore, {
+  prPath: observable,
   rating: observable,
   requestInProgress: observable,
   requestError: observable,
 
-  loadRating: action,
+  navigateTo: action,
   setRating: action,
   ratingCallback: action
 });

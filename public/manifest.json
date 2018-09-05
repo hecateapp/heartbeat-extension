@@ -29,7 +29,6 @@
     },
     "content_scripts": [{
         "matches": ["https://github.com/*"],
-        "include_globs": ["*github.com/*/*/pull/*"],
         "js": ["github.js"]
     }],
     "web_accessible_resources": [

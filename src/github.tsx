@@ -17,17 +17,24 @@ const stores = {
   pullRequestStore
 };
 
+const navigateTo = () => {
+  const path = location.pathname;
+  console.log("pjax:end", path);
+  pullRequestStore.navigateTo(path);
+}
+
+document.addEventListener("pjax:end", navigateTo)
+navigateTo();
+
 const div = document.createElement("div");
 div.style.position = "fixed";
 div.style.bottom = "0";
 div.style.right = "0";
 div.style.zIndex = "90210";
 
-const prPath = location.pathname;
-
 ReactDOM.render(
   <Provider {...stores}>
-    <PullRequestOverlay prPath={prPath} />
+    <PullRequestOverlay />
   </Provider>,
   div
 );
