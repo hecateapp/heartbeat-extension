@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Hecate Heartbeat",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Adds a rating widget to all GitHub pull requests so you can give each PR a score for tracking team progress over time.",
     "icons": {
         "16": "hecate-icon.png",
