@@ -1,5 +1,6 @@
 import * as React from "react";
 import { testToken } from "../util/api";
+import BugsnagReporter from "./BugsnagReporter";
 
 interface ISettingsState {
   apiTokenStatus: string | undefined;
@@ -38,24 +39,26 @@ export default class Settings extends React.Component<{}, ISettingsState> {
 
   public render() {
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <h3>Settings</h3>
-        <div>
-          <label>
-            API Key
-            <input
-              name="apiKey"
-              type="text"
-              defaultValue={this.state.apiKey}
-              ref={input => (this.apiKeyInput = input)}
-            />
-          </label>
-          <input type="submit" value="Save" />
-          {this.state.apiTokenStatus ? (
-            <p>{this.state.apiTokenStatus}</p>
-          ) : null}
-        </div>
-      </form>
+      <BugsnagReporter>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <h3>Settings</h3>
+          <div>
+            <label>
+              API Key
+              <input
+                name="apiKey"
+                type="text"
+                defaultValue={this.state.apiKey}
+                ref={input => (this.apiKeyInput = input)}
+              />
+            </label>
+            <input type="submit" value="Save" />
+            {this.state.apiTokenStatus ? (
+              <p>{this.state.apiTokenStatus}</p>
+            ) : null}
+          </div>
+        </form>
+      </BugsnagReporter>
     );
   }
 }

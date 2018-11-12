@@ -1,9 +1,11 @@
 {
   "name": "heartbeat-extension",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "bugsnag-js": "^4.7.3",
+    "bugsnag-react": "^1.1.1",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.5",
     "react": "^16.4.2",

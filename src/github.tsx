@@ -6,6 +6,7 @@ import { configure as configureMobx } from "mobx";
 import PullRequestStore from "./stores/PullRequestStore";
 
 import PullRequestOverlay from "./components/PullRequestOverlay";
+import BugsnagReporter from "./components/BugsnagReporter";
 
 const pullRequestStore = new PullRequestStore();
 
@@ -21,9 +22,9 @@ const navigateTo = () => {
   const path = location.pathname;
   console.log("pjax:end", path);
   pullRequestStore.navigateTo(path);
-}
+};
 
-document.addEventListener("pjax:end", navigateTo)
+document.addEventListener("pjax:end", navigateTo);
 navigateTo();
 
 const div = document.createElement("div");
@@ -33,9 +34,11 @@ div.style.right = "0";
 div.style.zIndex = "90210";
 
 ReactDOM.render(
-  <Provider {...stores}>
-    <PullRequestOverlay />
-  </Provider>,
+  <BugsnagReporter>
+    <Provider {...stores}>
+      <PullRequestOverlay />
+    </Provider>
+  </BugsnagReporter>,
   div
 );
 
