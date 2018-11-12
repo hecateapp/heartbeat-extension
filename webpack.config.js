@@ -6,6 +6,7 @@ plugins.push(new CopyWebpackPlugin([{
     flatten: true,
 }]));
 
+// Live reloading in dev
 if (process.env.NODE_ENV !== "production") {
     const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
     plugins.push(new ChromeExtensionReloader({
@@ -16,6 +17,19 @@ if (process.env.NODE_ENV !== "production") {
         }
     }));
 }
+
+// Dynamically construct host whitelists for the manifest
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
+const path = require('path');
+
+const manifestTemplate = require(path.join(__dirname, '.', 'manifest.json'));
+if (process.env.NODE_ENV === "production") {
+    manifestTemplate.permissions.push("https://*.hecate.co/");
+} else {
+    manifestTemplate.permissions.push("http://localhost:4567/");
+}
+
+plugins.push(new GenerateJsonPlugin('manifest.json', manifestTemplate));
 
 module.exports = {
     entry: {

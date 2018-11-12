@@ -16,6 +16,7 @@
     "@types/react-dom": "^16.0.7",
     "awesome-typescript-loader": "^5.2.0",
     "copy-webpack-plugin": "^4.5.2",
+    "generate-json-webpack-plugin": "^0.3.1",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.0.1",
     "webpack": "^4.16.5",
