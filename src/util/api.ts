@@ -4,7 +4,9 @@ interface IRequestOptions {
   body?: string;
 }
 
-const apiHost: string = "https://api.hecate.co";
+const apiHost = process.env.NODE_ENV !== "production"
+  ? "http://localhost:4567"
+  : "https://api.hecate.co";
 
 function fetchJson(
   apiKey: string,
