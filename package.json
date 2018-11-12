@@ -19,11 +19,12 @@
     "source-map-loader": "^0.2.4",
     "typescript": "^3.0.1",
     "webpack": "^4.16.5",
+    "webpack-chrome-extension-reloader": "^0.8.3",
     "webpack-command": "^0.4.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode development",
-    "release": "webpack --config webpack.config.js --mode production && zip -r release.zip dist/*"
+    "dev": "NODE_ENV=development webpack --config webpack.config.js --mode development --watch",
+    "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -r release.zip dist/*"
   },
   "author": "",
   "license": "ISC"
