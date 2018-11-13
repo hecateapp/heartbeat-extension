@@ -1,7 +1,22 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Provider } from "mobx-react";
+
+import { Provider as MobxProvider } from "mobx-react";
 import { configure as configureMobx } from "mobx";
+
+import JssProvider from "react-jss/lib/JssProvider";
+import { create } from "jss";
+import { createGenerateClassName, jssPreset } from "@material-ui/core/styles";
+
+const styleNode = document.createComment("jss-insertion-point");
+document.head.insertBefore(styleNode, document.head.firstChild);
+
+const generateClassName = createGenerateClassName();
+const jss = create({
+  ...jssPreset(),
+  // We define a custom insertion point that JSS will look for injecting the styles in the DOM.
+  insertionPoint: "jss-insertion-point"
+});
 
 import PullRequestStore from "./stores/PullRequestStore";
 
@@ -35,9 +50,11 @@ div.style.zIndex = "90210";
 
 ReactDOM.render(
   <BugsnagReporter>
-    <Provider {...stores}>
-      <PullRequestOverlay />
-    </Provider>
+    <JssProvider jss={jss} generateClassName={generateClassName}>
+      <MobxProvider {...stores}>
+        <PullRequestOverlay />
+      </MobxProvider>
+    </JssProvider>
   </BugsnagReporter>,
   div
 );
