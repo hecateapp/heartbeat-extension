@@ -1,31 +1,46 @@
 import * as React from "react";
+import { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import Button from "@material-ui/core/Button";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-
-import styled from "styled-components";
+import HeartbeatFAB from "./overlay/HeartbeatFAB";
 
 import PullRequestStore from "../stores/PullRequestStore";
+import RatingDialog from "./overlay/RatingDialog";
 
 interface IPullRequestOverlayProps {
   pullRequestStore?: PullRequestStore;
 }
 
-const HeartbeatFAB = styled(Button)`
-  margin: 1em;
-`;
+interface IPullRequestOverlayState {
+  open: boolean;
+}
 
-class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
-  render() {
+
+class PullRequestOverlay extends React.Component<IPullRequestOverlayProps, IPullRequestOverlayState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      open: false,
+    }
+  }
+  private showDialog = () : void => {
+    this.setState({open: true});
+  }
+
+  private hideDialog = () : void => {
+    this.setState({open: false});
+  }
+
+  public render() {
     if (!this.props.pullRequestStore || !this.props.pullRequestStore.prPath) {
       return null;
     }
 
     return (
-      <HeartbeatFAB variant="fab">
-        <FavoriteBorderIcon />
-      </HeartbeatFAB>
+      <Fragment>
+        <RatingDialog open={this.state.open} close={this.hideDialog} />
+        <HeartbeatFAB onClick={this.showDialog} />
+      </Fragment>
     );
   }
 }
