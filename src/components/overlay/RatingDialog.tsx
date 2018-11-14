@@ -6,8 +6,18 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Slide
+  Slide,
+  Grid,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography
 } from "@material-ui/core";
+import Slider from "@material-ui/lab/Slider";
+import BuildIcon from "@material-ui/icons/Build";
+import PeopleIcon from "@material-ui/icons/People";
 
 function Transition(props: any) {
   return <Slide direction="left" {...props} />;
@@ -30,16 +40,100 @@ export default class RatingDialog extends React.Component<IRatingDialogProps> {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Hecate Heartbeat Rating
+          Hecate Heartbeat
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            TODO: Put the rating form and stuff in here
+            Rate this pull request for both the quality of the outcome and the
+            quality of the collaboration. Leave the slider in the centre for a
+            neutral rating, push to the right for positive, and to the left for
+            negative.
           </DialogContentText>
+          <div
+            style={{ marginTop: "8px", padding: "8px 0", overflowX: "hidden" }}
+          >
+            <Grid container spacing={16}>
+            <Grid item xs={6} sm={12}>
+                <Typography variant="subtitle1" paragraph={false}>
+                  Rate this PR
+                </Typography>
+              </Grid>
+              <Grid item xs>
+                <BuildIcon fontSize="large" />
+                <Slider value={0} min={-3} max={3} step={1} />
+              </Grid>
+              <Grid item xs>
+                <PeopleIcon fontSize="large" />
+                <Slider value={0} min={-3} max={3} step={1} />
+              </Grid>
+            </Grid>
+            <Grid container spacing={16}>
+              <Grid item xs={6} sm={12}>
+                <TextField
+                  fullWidth
+                  id="rating-labels"
+                  label="Labels"
+                  placeholder="eg. tech-debt high-value"
+                  helperText="Private tags to categorise work"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={6} sm={12}>
+                <TextField
+                  id="rating-notes"
+                  label="Notes"
+                  helperText="Any thoughts on the work or reasoning behind the rating"
+                  multiline
+                  fullWidth
+                  rowsMax="4"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={6} sm={12}>
+                <Typography variant="subtitle1" paragraph={false}>
+                  Remind me about this pull request when
+                </Typography>
+              </Grid>
+              <Grid item xs>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="age-simple">Changes state</InputLabel>
+                  <Select
+                    fullWidth
+                    inputProps={{
+                      name: "reminder-state",
+                      id: "reminder-state"
+                    }}
+                  >
+                    <MenuItem value="None">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value="merged">Merges</MenuItem>
+                    <MenuItem value="closed">Closes</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  id="reminder-date"
+                  label="on date"
+                  type="date"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </div>
         </DialogContent>
+
         <DialogActions>
-          <Button color="primary" variant="outlined">Cancel</Button>
-          <Button color="primary" variant="raised">Save</Button>
+          <Button color="primary" variant="outlined">
+            Cancel
+          </Button>
+          <Button color="primary" variant="raised">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     );
