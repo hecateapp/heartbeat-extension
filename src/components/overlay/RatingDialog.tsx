@@ -15,9 +15,9 @@ import {
   MenuItem,
   Typography
 } from "@material-ui/core";
-import Slider from "@material-ui/lab/Slider";
 import BuildIcon from "@material-ui/icons/Build";
 import PeopleIcon from "@material-ui/icons/People";
+import Slider from "./Slider";
 
 function Transition(props: any) {
   return <Slide direction="left" {...props} />;
@@ -53,21 +53,21 @@ export default class RatingDialog extends React.Component<IRatingDialogProps> {
             style={{ marginTop: "8px", padding: "8px 0", overflowX: "hidden" }}
           >
             <Grid container spacing={16}>
-            <Grid item xs={6} sm={12}>
+              <Grid item xs={6} sm={12}>
                 <Typography variant="subtitle1" paragraph={false}>
                   Rate this PR
                 </Typography>
               </Grid>
               <Grid item xs>
-                <BuildIcon fontSize="large" />
-                <Slider value={0} min={-3} max={3} step={1} />
+                <Slider>
+                  <BuildIcon fontSize="large" />
+                </Slider>
               </Grid>
               <Grid item xs>
-                <PeopleIcon fontSize="large" />
-                <Slider value={0} min={-3} max={3} step={1} />
+                <Slider>
+                  <PeopleIcon fontSize="large" />
+                </Slider>
               </Grid>
-            </Grid>
-            <Grid container spacing={16}>
               <Grid item xs={6} sm={12}>
                 <TextField
                   fullWidth
