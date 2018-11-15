@@ -1,75 +1,98 @@
 import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
 import { ObservableMap } from "mobx";
 import { setRating, logView } from "./util/api";
+import Config from "./util/config";
 
-const prs: ObservableMap<string, number> = new ObservableMap();
-const ports: chrome.runtime.Port[] = []; 
+const config = new Config();
 
-let apiKey: string;
-chrome.storage.sync.get("apiKey", items => {
-  apiKey = items.apiKey;
-});
+function onLoad(
+  messageCallback: (msg: BackgroundRatingMessage) => void,
+  updateCache: (val: number) => void,
+  readCache: () => number,
+  prPath: string
+) {
+  const rating = readCache();
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "sync") {
-    if (changes.apiKey) {
-      apiKey = changes.apiKey.newValue;
-    }
+  if (rating) {
+    messageCallback({
+      rating: rating
+    });
   }
-});
+
+  if (!config.apiKey) {
+    messageCallback({
+      rating: readCache(),
+      error: "No API key set"
+    });
+    return;
+  }
+
+  logView(config.apiKey, prPath)
+    .then(resp => {
+      updateCache(resp.rating);
+    })
+    .catch(reason => {
+      messageCallback({
+        rating: readCache(),
+        error: reason
+      });
+    });
+}
+
+function notifyUpdate(
+  messageCallback: (msg: BackgroundRatingMessage) => void,
+  rating: number
+) {
+  messageCallback({ rating: rating });
+}
+
+function receiveUpdate(
+  messageCallback: (msg: BackgroundRatingMessage) => void,
+  writeCache: (val: number) => void,
+  msg: any
+) {
+  setRating(config.apiKey, msg.prPath, msg.rating)
+    .then(resp => {
+      writeCache(resp.rating);
+    })
+    .catch(reason => {
+      messageCallback({
+        rating: null,
+        error: reason
+      });
+    });
+}
+
+const cache: ObservableMap<string, number> = new ObservableMap();
 
 chrome.runtime.onConnect.addListener(port => {
   console.log("New port connected", port.name);
-  ports.push(port);
-  const prPath = port.name;
-  if (!prs.has(prPath)) {
-    prs.set(prPath, null);
-  }
+  const key = port.name;
 
-  const cancel = prs.observe(change => {
-    if (change.type === "update" && change.name === prPath) {
-      const msg: BackgroundRatingMessage = { rating: change.newValue };
-      port.postMessage(msg);
+  const messageCallback = (msg: BackgroundRatingMessage) => {
+    port.postMessage(msg);
+  };
+
+  const updateCache = (val: number) => {
+    cache.set(key, val);
+  };
+
+  const readCache = (): number => {
+    return cache.get(key);
+  };
+
+  onLoad(messageCallback, updateCache, readCache, key);
+
+  const cancel = cache.observe(change => {
+    if (change.type === "update" && change.name === key) {
+      notifyUpdate(messageCallback, change.newValue);
     }
   });
   port.onDisconnect.addListener(() => {
-    const i = ports.indexOf(port);
-    if (i > -1) {
-      ports.splice(i, 1);
-    }
     cancel();
   });
 
-  port.onMessage.addListener((msg: UIRatingMessage) => {
-    setRating(apiKey, msg.prPath, msg.rating)
-      .then(resp => {
-        prs.set(msg.prPath, resp.rating);
-      })
-      .catch(reason => {
-        const msg: BackgroundRatingMessage = {
-          rating: prs.get(prPath),
-          error: reason
-        };
-        port.postMessage(msg);
-      });
+  port.onMessage.addListener((msg: any) => {
+    receiveUpdate(messageCallback, updateCache, msg);
   });
-
-  logView(apiKey, prPath)
-    .then(resp => {
-      if (prs.get(prPath) === resp.rating) {
-        const msg: BackgroundRatingMessage = {
-          rating: resp.rating,
-        };
-        port.postMessage(msg);
-      } else {
-        prs.set(prPath, resp.rating);
-      }
-    })
-    .catch(reason => {
-      const msg: BackgroundRatingMessage = {
-        rating: prs.get(prPath),
-        error: reason
-      };
-      port.postMessage(msg);
-    });
 });
