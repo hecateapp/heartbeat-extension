@@ -14,17 +14,18 @@ class PullRequestStore {
 
   public navigateTo(path: string) {
     console.log("in navigate to with", path)
+    if (this.prPath) {
+      console.log("disconnecting last path")
+      this.prPath = null;
+      this.port.disconnect();
+      this.port = null;
+    }
+
     if (path.match(prPathRegex)) {
       console.log("definitely a PR");
       this.prPath = path;
       this.requestInProgress = true;
       this.connectPort();
-    } else {
-      if (this.prPath) {
-        this.prPath = null;
-        this.port.disconnect();
-        this.port = null;
-      }
     }
   }
 
