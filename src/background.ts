@@ -1,17 +1,17 @@
 import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
-import { ObservableMap } from "mobx";
+
 import { setRating, logView } from "./util/api";
-import Config from "./util/config";
+import Config from "./background/config";
+import Cache, { CacheValue } from "./background/Cache";
 
 const config = new Config();
 
 function onLoad(
   messageCallback: (msg: BackgroundRatingMessage) => void,
-  updateCache: (val: number) => void,
-  readCache: () => number,
+  cachedValue:  CacheValue<number>,
   prPath: string
 ) {
-  const rating = readCache();
+  const rating = cachedValue.get();
 
   if (rating) {
     messageCallback({
@@ -19,21 +19,13 @@ function onLoad(
     });
   }
 
-  if (!config.apiKey) {
-    messageCallback({
-      rating: readCache(),
-      error: "No API key set"
-    });
-    return;
-  }
-
   logView(config.apiKey, prPath)
     .then(resp => {
-      updateCache(resp.rating);
+      cachedValue.set(resp.rating);
     })
     .catch(reason => {
       messageCallback({
-        rating: readCache(),
+        rating: cachedValue.get(),
         error: reason
       });
     });
@@ -48,12 +40,12 @@ function notifyUpdate(
 
 function receiveUpdate(
   messageCallback: (msg: BackgroundRatingMessage) => void,
-  writeCache: (val: number) => void,
+  cachedValue: CacheValue<number>,
   msg: any
 ) {
   setRating(config.apiKey, msg.prPath, msg.rating)
     .then(resp => {
-      writeCache(resp.rating);
+      cachedValue.set(resp.rating);
     })
     .catch(reason => {
       messageCallback({
@@ -63,7 +55,7 @@ function receiveUpdate(
     });
 }
 
-const cache: ObservableMap<string, number> = new ObservableMap();
+const cache = new Cache<number>();
 
 chrome.runtime.onConnect.addListener(port => {
   console.log("New port connected", port.name);
@@ -73,26 +65,25 @@ chrome.runtime.onConnect.addListener(port => {
     port.postMessage(msg);
   };
 
-  const updateCache = (val: number) => {
-    cache.set(key, val);
-  };
+  const cachedValue = cache.value(key);
 
-  const readCache = (): number => {
-    return cache.get(key);
-  };
+  if (!config.apiKey) {
+    port.postMessage({
+      error: "No API key set"
+    });
+  }
 
-  onLoad(messageCallback, updateCache, readCache, key);
+  onLoad(messageCallback, cachedValue, key);
 
-  const cancel = cache.observe(change => {
-    if (change.type === "update" && change.name === key) {
-      notifyUpdate(messageCallback, change.newValue);
-    }
+  const cancel = cache.observe(key, newValue => {
+    notifyUpdate(messageCallback, newValue);
   });
+
   port.onDisconnect.addListener(() => {
     cancel();
   });
 
   port.onMessage.addListener((msg: any) => {
-    receiveUpdate(messageCallback, updateCache, msg);
+    receiveUpdate(messageCallback, cachedValue, msg);
   });
 });
