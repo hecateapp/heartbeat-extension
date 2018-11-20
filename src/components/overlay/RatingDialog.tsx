@@ -7,35 +7,31 @@ import {
   DialogActions,
   Button,
   Slide,
-  Grid,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Typography
 } from "@material-ui/core";
-import BuildIcon from "@material-ui/icons/Build";
-import PeopleIcon from "@material-ui/icons/People";
-import Slider from "./Slider";
+import { observer, inject } from "mobx-react";
+import PullRequestStore from "../../stores/PullRequestStore";
+import RatingForm from "./RatingForm";
 
 function Transition(props: any) {
   return <Slide direction="left" {...props} />;
 }
 
 interface IRatingDialogProps {
-  open: boolean;
-  close: () => void;
+  pullRequestStore?: PullRequestStore;
 }
 
-export default class RatingDialog extends React.Component<IRatingDialogProps> {
+class RatingDialog extends React.Component<IRatingDialogProps> {
   public render() {
+    if (!this.props.pullRequestStore) {
+      return null;
+    }
+
     return (
       <Dialog
-        open={this.props.open}
+        open={this.props.pullRequestStore.isModalOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={this.props.close}
+        onClose={this.props.pullRequestStore.closeModal}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
@@ -52,86 +48,23 @@ export default class RatingDialog extends React.Component<IRatingDialogProps> {
           <div
             style={{ marginTop: "8px", padding: "8px 0", overflowX: "hidden" }}
           >
-            <Grid container spacing={16}>
-              <Grid item xs={6} sm={12}>
-                <Typography variant="subtitle1" paragraph={false}>
-                  Rate this PR
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <Slider>
-                  <BuildIcon fontSize="large" />
-                </Slider>
-              </Grid>
-              <Grid item xs>
-                <Slider>
-                  <PeopleIcon fontSize="large" />
-                </Slider>
-              </Grid>
-              <Grid item xs={6} sm={12}>
-                <TextField
-                  fullWidth
-                  id="rating-labels"
-                  label="Labels"
-                  placeholder="eg. tech-debt high-value"
-                  helperText="Private tags to categorise work"
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6} sm={12}>
-                <TextField
-                  id="rating-notes"
-                  label="Notes"
-                  helperText="Any thoughts on the work or reasoning behind the rating"
-                  multiline
-                  fullWidth
-                  rowsMax="4"
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6} sm={12}>
-                <Typography variant="subtitle1" paragraph={false}>
-                  Remind me about this pull request when
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="age-simple">Changes state</InputLabel>
-                  <Select
-                    fullWidth
-                    inputProps={{
-                      name: "reminder-state",
-                      id: "reminder-state"
-                    }}
-                  >
-                    <MenuItem value="None">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="merged">Merges</MenuItem>
-                    <MenuItem value="closed">Closes</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs>
-                <TextField
-                  id="reminder-date"
-                  label="on date"
-                  type="date"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                />
-              </Grid>
-            </Grid>
+            <RatingForm />
           </div>
         </DialogContent>
 
         <DialogActions>
-          <Button color="primary" variant="outlined">
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={this.props.pullRequestStore.closeModal}
+          >
             Cancel
           </Button>
-          <Button color="primary" variant="raised">
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.props.pullRequestStore.saveRating}
+          >
             Save
           </Button>
         </DialogActions>
@@ -139,3 +72,5 @@ export default class RatingDialog extends React.Component<IRatingDialogProps> {
     );
   }
 }
+
+export default inject("pullRequestStore")(observer(RatingDialog));

@@ -11,26 +11,7 @@ interface IPullRequestOverlayProps {
   pullRequestStore?: PullRequestStore;
 }
 
-interface IPullRequestOverlayState {
-  open: boolean;
-}
-
-
-class PullRequestOverlay extends React.Component<IPullRequestOverlayProps, IPullRequestOverlayState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      open: false,
-    }
-  }
-  private showDialog = () : void => {
-    this.setState({open: true});
-  }
-
-  private hideDialog = () : void => {
-    this.setState({open: false});
-  }
-
+class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
   public render() {
     if (!this.props.pullRequestStore || !this.props.pullRequestStore.prPath) {
       return null;
@@ -38,8 +19,8 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps, IPull
 
     return (
       <Fragment>
-        <RatingDialog open={this.state.open} close={this.hideDialog} />
-        <HeartbeatFAB onClick={this.showDialog} />
+        <RatingDialog />
+        <HeartbeatFAB onClick={this.props.pullRequestStore.openModal} />
       </Fragment>
     );
   }

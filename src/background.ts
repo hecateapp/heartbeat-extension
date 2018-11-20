@@ -1,20 +1,21 @@
-import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
 
 import { setRating, logView } from "./util/api";
 import Config from "./background/config";
 import Cache, { CacheValue } from "./background/Cache";
+import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, Rating } from "./util/types";
 
 const config = new Config();
 
 function onLoad(
-  messageCallback: (msg: BackgroundRatingMessage) => void,
-  cachedValue:  CacheValue<number>,
+  messageCallback: (msg: ViewResponse) => void,
+  cachedValue:  CacheValue<Rating>,
   prPath: string
 ) {
   const rating = cachedValue.get();
 
   if (rating) {
     messageCallback({
+      type: "ViewResponse",
       rating: rating
     });
   }
@@ -25,6 +26,7 @@ function onLoad(
     })
     .catch(reason => {
       messageCallback({
+        type: "ViewResponse",
         rating: cachedValue.get(),
         error: reason
       });
@@ -32,15 +34,15 @@ function onLoad(
 }
 
 function notifyUpdate(
-  messageCallback: (msg: BackgroundRatingMessage) => void,
-  rating: number
+  messageCallback: (msg: ObservedRatingUpdateResponse) => void,
+  rating: Rating
 ) {
-  messageCallback({ rating: rating });
+  messageCallback({ type: "ObservedRatingUpdateResponse", rating: rating });
 }
 
 function receiveUpdate(
-  messageCallback: (msg: BackgroundRatingMessage) => void,
-  cachedValue: CacheValue<number>,
+  messageCallback: (msg: SaveRatingResponse) => void,
+  cachedValue: CacheValue<Rating>,
   msg: any
 ) {
   setRating(config.apiKey, msg.prPath, msg.rating)
@@ -49,19 +51,20 @@ function receiveUpdate(
     })
     .catch(reason => {
       messageCallback({
+        type: "SaveRatingResponse",
         rating: null,
         error: reason
       });
     });
 }
 
-const cache = new Cache<number>();
+const cache = new Cache<Rating>();
 
 chrome.runtime.onConnect.addListener(port => {
   console.log("New port connected", port.name);
   const key = port.name;
 
-  const messageCallback = (msg: BackgroundRatingMessage) => {
+  const messageCallback = (msg: BackgroundMessage) => {
     port.postMessage(msg);
   };
 
