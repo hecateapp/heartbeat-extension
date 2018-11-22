@@ -35,12 +35,17 @@ class PullRequestStore {
   public openModal = () => {
     this.isModalOpen = true;
     if (!this.rating) {
-      this.rating = observable(new Rating());
+      if (this.serverRating) {
+        this.rating = this.serverRating;
+      } else {
+        this.rating = observable(new Rating());
+      }
     }
   };
 
   public closeModal = () => {
     this.isModalOpen = false;
+    this.rating = undefined;
   };
 
   public saveRating = () => {
