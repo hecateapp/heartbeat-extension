@@ -14,7 +14,6 @@ export type BackgroundMessage =
 
 export interface SaveRatingResponse {
   type: "SaveRatingResponse";
-  rating: Rating;
   error?: string;
 }
 
@@ -26,7 +25,7 @@ export interface ViewResponse {
 
 export interface ObservedRatingUpdateResponse {
   type: "ObservedRatingUpdateResponse";
-  rating?: Rating;
+  rating: Rating;
 }
 
 export interface AuthError {
@@ -38,7 +37,7 @@ class Rating {
   public processScore: number = 0;
   public labels: string[] = [];
   public notes?: string;
-  public remindOnDate?: Date;
+  public remindOnDate?: string; // TODO make date?
   public remindOnState?: string;
 }
 

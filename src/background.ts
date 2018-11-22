@@ -52,7 +52,6 @@ function receiveUpdate(
     .catch(reason => {
       messageCallback({
         type: "SaveRatingResponse",
-        rating: null,
         error: reason
       });
     });

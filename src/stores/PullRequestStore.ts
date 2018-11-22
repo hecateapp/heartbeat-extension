@@ -37,11 +37,11 @@ class PullRequestStore {
     if (!this.rating) {
       this.rating = observable(new Rating());
     }
-  }
+  };
 
   public closeModal = () => {
     this.isModalOpen = false;
-  }
+  };
 
   public saveRating = () => {
     if (this.rating) {
@@ -54,19 +54,33 @@ class PullRequestStore {
         rating: this.rating
       });
     }
-  }
+  };
 
   public setRatingProperty<K extends keyof Rating>(key: K, value: Rating[K]) {
     this.rating[key] = value;
   }
 
   public backgroundMessageCallback(msg: BackgroundMessage) {
+    console.log("Backend message received", msg);
     switch (msg.type) {
       case "AuthError":
         // handle no auth:
         this.authError = true;
         break;
       case "SaveRatingResponse":
+        if (msg.error) {
+          this.requestError = msg.error;
+        }
+        break;
+      case "ObservedRatingUpdateResponse":
+        this.rating = msg.rating;
+        if (this.requestInProgress) {
+          this.requestInProgress = false;
+        }
+        if (this.isModalOpen) {
+          this.isModalOpen = false;
+        }
+        break;
       case "ViewResponse":
         if (msg.error) {
           this.requestError = msg.error;
@@ -114,7 +128,7 @@ decorate(PullRequestStore, {
   backgroundMessageCallback: action,
   openModal: action,
   closeModal: action,
-  setRatingProperty: action,
+  setRatingProperty: action
 });
 
 export default PullRequestStore;

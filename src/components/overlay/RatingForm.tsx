@@ -23,7 +23,7 @@ interface IRatingFormProps {
 class RatingForm extends Component<IRatingFormProps> {
   private changeHandler<K extends keyof Rating>(
     key: K
-  ): (event: React.ChangeEvent<HTMLInputElement>) => void {
+  ): (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void {
     return event => {
       this.props.pullRequestStore!.setRatingProperty<K>(
         key,
@@ -90,7 +90,8 @@ class RatingForm extends Component<IRatingFormProps> {
               fullWidth
               rowsMax="4"
               margin="normal"
-              value={this.props.pullRequestStore.rating.notes}
+              value={this.props.pullRequestStore.rating.notes || ''}
+              onChange={this.changeHandler<"notes">("notes")}
             />
           </Grid>
           <Grid item xs={6} sm={12}>
@@ -110,6 +111,7 @@ class RatingForm extends Component<IRatingFormProps> {
                 value={
                   this.props.pullRequestStore.rating.remindOnState || "None"
                 }
+                onChange={this.changeHandler<"remindOnState">("remindOnState")}
               >
                 <MenuItem value="None">
                   <em>None</em>
@@ -128,6 +130,10 @@ class RatingForm extends Component<IRatingFormProps> {
               InputLabelProps={{
                 shrink: true
               }}
+              value={
+                this.props.pullRequestStore.rating.remindOnDate || ''
+              }
+              onChange={this.changeHandler<"remindOnDate">("remindOnDate")}
             />
           </Grid>
         </Grid>
