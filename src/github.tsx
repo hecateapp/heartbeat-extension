@@ -6,7 +6,7 @@ import { configure as configureMobx } from "mobx";
 
 import JssProvider from "react-jss/lib/JssProvider";
 import { create } from "jss";
-import { createGenerateClassName, jssPreset } from "@material-ui/core/styles";
+import { createGenerateClassName, jssPreset, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 const styleNode = document.createComment("jss-insertion-point");
 document.head.insertBefore(styleNode, document.head.firstChild);
@@ -42,6 +42,12 @@ const navigateTo = () => {
 document.addEventListener("pjax:end", navigateTo);
 navigateTo();
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
+
 const div = document.createElement("div");
 div.style.position = "fixed";
 div.style.bottom = "0";
@@ -52,7 +58,9 @@ ReactDOM.render(
   <BugsnagReporter>
     <JssProvider jss={jss} generateClassName={generateClassName}>
       <MobxProvider {...stores}>
-        <PullRequestOverlay />
+        <MuiThemeProvider theme={theme}>
+          <PullRequestOverlay />
+        </MuiThemeProvider>
       </MobxProvider>
     </JssProvider>
   </BugsnagReporter>,
