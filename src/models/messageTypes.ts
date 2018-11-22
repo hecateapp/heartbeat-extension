@@ -1,4 +1,4 @@
-import { decorate, action, observable } from "mobx";
+import { Rating } from "./Rating";
 
 export interface SaveRatingRequest {
   type: "SaveRatingRequest";
@@ -31,22 +31,3 @@ export interface ObservedRatingUpdateResponse {
 export interface AuthError {
   type: "AuthError";
 }
-
-class Rating {
-  public outcomeScore: number = 0;
-  public processScore: number = 0;
-  public labels: string[] = [];
-  public notes?: string;
-  public remindOnDate?: string; // TODO make date?
-  public remindOnState?: string;
-}
-
-decorate(Rating, {
-  outcomeScore: observable,
-  processScore: observable,
-  labels: observable,
-  notes: observable,
-  remindOnDate: observable,
-  remindOnState: observable
-});
-export { Rating };

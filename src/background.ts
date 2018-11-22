@@ -2,7 +2,8 @@
 import { setRating, logView } from "./util/api";
 import Config from "./background/config";
 import Cache, { CacheValue } from "./background/Cache";
-import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, Rating, SaveRatingRequest } from "./util/types";
+import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, SaveRatingRequest } from "./models/messageTypes";
+import { Rating } from "./models/Rating";
 
 const config = new Config();
 

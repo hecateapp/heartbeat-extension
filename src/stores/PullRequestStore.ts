@@ -1,6 +1,6 @@
 import { decorate, observable, action, runInAction } from "mobx";
-import { BackgroundMessage, Rating, SaveRatingRequest } from "../util/types";
-
+import { BackgroundMessage, SaveRatingRequest } from "../models/messageTypes";
+import Rating from "../models/Rating";
 const prPathRegex = /^\/[\w-]+\/[\w-]+\/pull\/\d+/i;
 
 class PullRequestStore {
