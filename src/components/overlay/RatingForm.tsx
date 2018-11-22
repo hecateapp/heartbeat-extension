@@ -71,7 +71,7 @@ class RatingForm extends Component<IRatingFormProps> {
               <PeopleIcon fontSize="large" />
             </Slider>
           </Grid>
-          <Grid item xs={6} sm={12}>
+          {/* <Grid item xs={6} sm={12}>
             <TextField
               fullWidth
               id="rating-labels"
@@ -80,7 +80,7 @@ class RatingForm extends Component<IRatingFormProps> {
               helperText="Private tags to categorise work"
               margin="normal"
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={6} sm={12}>
             <TextField
               id="rating-notes"
