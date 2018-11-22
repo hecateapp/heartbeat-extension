@@ -2,7 +2,7 @@
 import { setRating, logView } from "./util/api";
 import Config from "./background/config";
 import Cache, { CacheValue } from "./background/Cache";
-import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, Rating } from "./util/types";
+import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, Rating, SaveRatingRequest } from "./util/types";
 
 const config = new Config();
 
@@ -43,7 +43,7 @@ function notifyUpdate(
 function receiveUpdate(
   messageCallback: (msg: SaveRatingResponse) => void,
   cachedValue: CacheValue<Rating>,
-  msg: any
+  msg: SaveRatingRequest
 ) {
   setRating(config.apiKey, msg.prPath, msg.rating)
     .then(resp => {

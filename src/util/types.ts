@@ -1,7 +1,7 @@
 import { decorate, action, observable } from "mobx";
 
 export interface SaveRatingRequest {
-  type: "RatingRequest";
+  type: "SaveRatingRequest";
   prPath: string;
   rating: Rating;
 }

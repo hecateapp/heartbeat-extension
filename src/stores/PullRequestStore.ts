@@ -49,7 +49,7 @@ class PullRequestStore {
       this.requestInProgress = true;
 
       this.postMessage({
-        type: "RatingRequest",
+        type: "SaveRatingRequest",
         prPath: this.prPath,
         rating: this.rating
       });

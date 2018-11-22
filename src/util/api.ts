@@ -46,7 +46,7 @@ export function logView(
 export function setRating(
   apiKey: string,
   prPath: string,
-  rating: number
+  rating: Rating
 ): Promise<{ rating: Rating }> {
   return fetchJson(apiKey, "/heartbeat/set_rating", {
     method: "POST",
