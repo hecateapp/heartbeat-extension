@@ -14,7 +14,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import Slider from "./Slider";
 import { inject, observer } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
-import { Rating } from "../../models/Rating";
+import Rating from "../../models/Rating";
 
 interface IRatingFormProps {
   pullRequestStore?: PullRequestStore;

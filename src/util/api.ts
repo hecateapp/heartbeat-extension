@@ -1,4 +1,4 @@
-import { Rating } from "../models/messageTypes";
+import Rating from "../models/Rating";
 
 interface IRequestOptions {
   headers?: object;

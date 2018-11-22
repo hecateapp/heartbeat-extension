@@ -1,4 +1,4 @@
-import { Rating } from "./Rating";
+import Rating from "./Rating";
 
 export interface SaveRatingRequest {
   type: "SaveRatingRequest";
