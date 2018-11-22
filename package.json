@@ -21,7 +21,7 @@
     "generate-json-webpack-plugin": "0.3.1",
     "source-map-loader": "0.2.4",
     "typescript": "3.0.1",
-    "webpack": "4.16.5",
+    "webpack": "4.26.0",
     "webpack-chrome-extension-reloader": "0.8.3",
     "webpack-command": "0.4.1"
   },
