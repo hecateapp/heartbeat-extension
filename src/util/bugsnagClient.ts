@@ -13,7 +13,8 @@ function beforeSend(report: Report) {
 
 const bugsnagConfig: IConfig = {
   apiKey: "1a6939ea4140dba5f4e84d13e65a4943",
-  beforeSend: beforeSend
+  beforeSend: beforeSend,
+  autoCaptureSessions: false,
 };
 
 export default bugsnag(bugsnagConfig);
