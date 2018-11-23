@@ -11,7 +11,7 @@ class PullRequestStore {
   public isModalOpen: boolean = false;
 
   public rating?: Rating;
-  private serverRating?: Rating;
+  public serverRating?: Rating;
 
   public requestInProgress: boolean = false;
   public requestError: string | undefined;
@@ -40,7 +40,6 @@ class PullRequestStore {
     } else {
       this.rating = new Rating();
     }
-
   };
 
   public closeModal = () => {
@@ -79,11 +78,8 @@ class PullRequestStore {
         break;
       case "ObservedRatingUpdateResponse":
         this.serverRating = msg.rating;
-        if (this.requestInProgress) {
-          this.requestInProgress = false;
-          if (this.isModalOpen) {
-            this.isModalOpen = false;
-          }
+        if (this.requestInProgress && this.isModalOpen) {
+          this.isModalOpen = false;
         }
         break;
       case "ViewResponse":
@@ -124,6 +120,7 @@ class PullRequestStore {
 decorate(PullRequestStore, {
   prPath: observable,
   rating: observable,
+  serverRating: observable,
   requestInProgress: observable,
   requestError: observable,
   isModalOpen: observable,
