@@ -24,6 +24,12 @@ function onLoad(
   logView(config.apiKey, prPath)
     .then(resp => {
       cachedValue.set(resp.rating);
+      if (!resp.rating) {
+        messageCallback({
+          type: "ViewResponse",
+          rating: null,
+        });
+      }
     })
     .catch(reason => {
       messageCallback({

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SFC, ReactChild } from "react";
 import MuiSlider from "@material-ui/lab/Slider";
-import styled from "styled-components";
+import { withStyles } from "@material-ui/core/styles";
 
 interface ISliderProps {
   children: ReactChild;
@@ -9,9 +9,11 @@ interface ISliderProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>, value: number) => void;
 }
 
-const StyledSlider = styled(MuiSlider)`
-    padding: 22px 0;
-`;
+const StyledSlider = withStyles({
+  root: {
+    padding: "22px 0"
+  }
+})(MuiSlider);
 
 const Slider: SFC<ISliderProps> = ({ children, onChange, value }) => (
   <React.Fragment>

@@ -4,22 +4,37 @@ import { SFC } from "react";
 import Button from "@material-ui/core/Button";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
-import styled from "styled-components";
+import { Badge, withStyles } from "@material-ui/core";
+import PullRequestStore from "../../stores/PullRequestStore";
+import { inject, observer } from "mobx-react";
 
-import { Badge } from "@material-ui/core";
-
-const FAB = styled(Button)`
-  margin: 1em;
-`;
+const FAB = withStyles({
+  root: {
+    margin: "1em"
+  }
+})(Button);
 
 const HeartbeatFAB: SFC<{
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
-}> = ({ onClick }) => (
-  <FAB variant="fab" color="primary" onClick={onClick}>
-    <Badge badgeContent={"!"} color="secondary">
-      <FavoriteBorderIcon fontSize="large" />
-    </Badge>
-  </FAB>
-);
+  onClick: (
+    event: React.MouseEvent<HTMLElement>,
+  ) => void;
+  pullRequestStore?: PullRequestStore;
+}> = ({ onClick, pullRequestStore }) => {
+  let icon = <FavoriteBorderIcon fontSize="large" />;
+  if (pullRequestStore) {
+    if (pullRequestStore.authError) {
+      icon = <Badge badgeContent={"!"} color="secondary">{icon}</Badge>
+    } else if (pullRequestStore.requestInProgress) {
+      icon = <Badge badgeContent={"♻"} color="secondary">{icon}</Badge>
+    } else if (pullRequestStore.serverRating) {
+      icon = <Badge badgeContent={"✅"} color="secondary">{icon}</Badge>
+    }
+  }
+  return (
+    <FAB variant="fab" color="primary" onClick={onClick}>
+      {icon}
+    </FAB>
+  );
+};
 
-export default HeartbeatFAB;
+export default inject("pullRequestStore")(observer(HeartbeatFAB));
