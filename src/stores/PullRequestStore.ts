@@ -34,18 +34,18 @@ class PullRequestStore {
 
   public openModal = () => {
     this.isModalOpen = true;
-    if (!this.rating) {
-      if (this.serverRating) {
-        this.rating = this.serverRating;
-      } else {
-        this.rating = observable(new Rating());
-      }
+
+    if (this.serverRating) {
+      this.rating = this.serverRating;
+    } else {
+      this.rating = new Rating();
     }
+
   };
 
   public closeModal = () => {
     this.isModalOpen = false;
-    this.rating = undefined;
+    this.rating = null;
   };
 
   public saveRating = () => {
@@ -78,19 +78,19 @@ class PullRequestStore {
         }
         break;
       case "ObservedRatingUpdateResponse":
-        this.rating = msg.rating;
+        this.serverRating = msg.rating;
         if (this.requestInProgress) {
           this.requestInProgress = false;
-        }
-        if (this.isModalOpen) {
-          this.isModalOpen = false;
+          if (this.isModalOpen) {
+            this.isModalOpen = false;
+          }
         }
         break;
       case "ViewResponse":
         if (msg.error) {
           this.requestError = msg.error;
         } else if (msg.rating) {
-          this.rating = this.serverRating = msg.rating;
+          this.serverRating = msg.rating;
         }
         break;
     }
