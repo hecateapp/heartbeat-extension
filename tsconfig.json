@@ -9,6 +9,9 @@
         "jsx": "react"
     },
     "include": [
-        "./src/**/*"
+        "src/**/*"
+    ],
+    "exclude": [
+        "src/**/*.test.ts"
     ]
 }
