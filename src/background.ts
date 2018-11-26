@@ -31,11 +31,11 @@ function onLoad(
         });
       }
     })
-    .catch(reason => {
+    .catch((reason: Error) => {
       messageCallback({
         type: "ViewResponse",
         rating: cachedValue.get(),
-        error: reason
+        error: reason.message,
       });
     });
 }
@@ -56,10 +56,10 @@ function receiveUpdate(
     .then(resp => {
       cachedValue.set(resp.rating);
     })
-    .catch(reason => {
+    .catch((reason: Error) => {
       messageCallback({
         type: "SaveRatingResponse",
-        error: reason
+        error: reason.message,
       });
     });
 }

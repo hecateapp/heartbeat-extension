@@ -22,7 +22,7 @@ const HeartbeatFAB: SFC<{
 }> = ({ onClick, pullRequestStore }) => {
   let icon = <FavoriteBorderIcon fontSize="large" />;
   if (pullRequestStore) {
-    if (pullRequestStore.authError) {
+    if (pullRequestStore.authError || pullRequestStore.requestError) {
       icon = <Badge badgeContent={"!"} color="secondary">{icon}</Badge>
     } else if (pullRequestStore.requestInProgress) {
       icon = <Badge badgeContent={"♻"} color="secondary">{icon}</Badge>

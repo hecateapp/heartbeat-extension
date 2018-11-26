@@ -1,143 +1,65 @@
 import * as React from "react";
-import { Component, Fragment } from "react";
 import {
-  Grid,
-  Typography,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
 } from "@material-ui/core";
-import BuildIcon from "@material-ui/icons/Build";
-import PeopleIcon from "@material-ui/icons/People";
-import Slider from "./Slider";
 import { inject, observer } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
-import Rating from "../../models/Rating";
+import RatingFormFields from "./RatingFormFields";
 
 interface IRatingFormProps {
   pullRequestStore?: PullRequestStore;
 }
 
-class RatingForm extends Component<IRatingFormProps> {
-  private changeHandler<K extends keyof Rating>(
-    key: K
-  ): (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void {
-    return event => {
-      this.props.pullRequestStore!.setRatingProperty<K>(
-        key,
-        event.target.value
-      );
-    };
-  }
-
-  private changeSlider(
-    key: "outcomeScore" | "processScore"
-  ): (event: React.ChangeEvent, value: number) => void {
-    return (event, value) => {
-      this.props.pullRequestStore.setRatingProperty<
-        "outcomeScore" | "processScore"
-      >(key, value);
-    };
-  }
-
+class RatingForm extends React.Component<IRatingFormProps> {
   public render() {
-    if (!this.props.pullRequestStore || !this.props.pullRequestStore.rating) {
-      return null;
-    }
-
     return (
-      <Fragment>
-        <Grid container spacing={16}>
-          <Grid item xs={6} sm={12}>
-            <Typography variant="subtitle1" paragraph={false}>
-              Rate this PR
-            </Typography>
-          </Grid>
-          <Grid item xs>
-            <Slider
-              value={this.props.pullRequestStore.rating.outcomeScore}
-              onChange={this.changeSlider("outcomeScore")}
+      <React.Fragment>
+        <DialogTitle id="alert-dialog-slide-title">
+          Hecate Heartbeat
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Rate this pull request for both the quality of the outcome and the
+            quality of the collaboration. Leave the slider in the centre for a
+            neutral rating, push to the right for positive, and to the left for
+            negative.
+          </DialogContentText>
+          {this.props.pullRequestStore!.requestError && (
+            <DialogContentText
+              id="alert-dialog-slide-description"
+              color="error"
             >
-              <BuildIcon fontSize="large" />
-            </Slider>
-          </Grid>
-          <Grid item xs>
-            <Slider
-              value={this.props.pullRequestStore.rating.processScore}
-              onChange={this.changeSlider("processScore")}
-            >
-              <PeopleIcon fontSize="large" />
-            </Slider>
-          </Grid>
-          {/* <Grid item xs={6} sm={12}>
-            <TextField
-              fullWidth
-              id="rating-labels"
-              label="Labels"
-              placeholder="eg. tech-debt high-value"
-              helperText="Private tags to categorise work"
-              margin="normal"
-            />
-          </Grid> */}
-          <Grid item xs={6} sm={12}>
-            <TextField
-              id="rating-notes"
-              label="Notes"
-              helperText="Any thoughts on the work or reasoning behind the rating"
-              multiline
-              fullWidth
-              rowsMax="4"
-              margin="normal"
-              value={this.props.pullRequestStore.rating.notes || ''}
-              onChange={this.changeHandler<"notes">("notes")}
-            />
-          </Grid>
-          <Grid item xs={6} sm={12}>
-            <Typography variant="subtitle1" paragraph={false}>
-              Remind me about this pull request when
-            </Typography>
-          </Grid>
-          <Grid item xs>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="age-simple">Changes state</InputLabel>
-              <Select
-                fullWidth
-                inputProps={{
-                  name: "reminder-state",
-                  id: "reminder-state"
-                }}
-                value={
-                  this.props.pullRequestStore.rating.remindOnState || "None"
-                }
-                onChange={this.changeHandler<"remindOnState">("remindOnState")}
-              >
-                <MenuItem value="None">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="merged">Merges</MenuItem>
-                <MenuItem value="closed">Closes</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs>
-            <TextField
-              id="reminder-date"
-              label="on date"
-              type="date"
-              fullWidth
-              InputLabelProps={{
-                shrink: true
-              }}
-              value={
-                this.props.pullRequestStore.rating.remindOnDate || ''
-              }
-              onChange={this.changeHandler<"remindOnDate">("remindOnDate")}
-            />
-          </Grid>
-        </Grid>
-      </Fragment>
+              There was an error of: {this.props.pullRequestStore.requestError}
+            </DialogContentText>
+          )}
+          <div
+            style={{ marginTop: "8px", padding: "8px 0", overflowX: "hidden" }}
+          >
+            <RatingFormFields />
+          </div>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={this.props.pullRequestStore.closeModal}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.props.pullRequestStore.saveRating}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </React.Fragment>
     );
   }
 }
