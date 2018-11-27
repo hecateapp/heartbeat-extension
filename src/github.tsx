@@ -4,19 +4,16 @@ import * as ReactDOM from "react-dom";
 import { Provider as MobxProvider } from "mobx-react";
 import { configure as configureMobx } from "mobx";
 
-import JssProvider from "react-jss/lib/JssProvider";
 import { create } from "jss";
-import { createGenerateClassName, jssPreset, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import {
+  createGenerateClassName,
+  jssPreset,
+  MuiThemeProvider,
+  createMuiTheme
+} from "@material-ui/core/styles";
 
 const styleNode = document.createComment("jss-insertion-point");
 document.head.insertBefore(styleNode, document.head.firstChild);
-
-const generateClassName = createGenerateClassName();
-const jss = create({
-  ...jssPreset(),
-  // We define a custom insertion point that JSS will look for injecting the styles in the DOM.
-  insertionPoint: "jss-insertion-point"
-});
 
 import PullRequestStore from "./stores/PullRequestStore";
 
@@ -44,8 +41,8 @@ navigateTo();
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true,
-  },
+    useNextVariants: true
+  }
 });
 
 const div = document.createElement("div");
@@ -56,13 +53,11 @@ div.style.zIndex = "90210";
 
 ReactDOM.render(
   <BugsnagReporter>
-    <JssProvider jss={jss} generateClassName={generateClassName}>
-      <MobxProvider {...stores}>
-        <MuiThemeProvider theme={theme}>
-          <PullRequestOverlay />
-        </MuiThemeProvider>
-      </MobxProvider>
-    </JssProvider>
+    <MobxProvider {...stores}>
+      <MuiThemeProvider theme={theme}>
+        <PullRequestOverlay />
+      </MuiThemeProvider>
+    </MobxProvider>
   </BugsnagReporter>,
   div
 );
