@@ -1,14 +1,12 @@
 import * as React from "react";
 import { Component, Fragment } from "react";
-import {
-  Grid,
-  Typography,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import BuildIcon from "@material-ui/icons/Build";
 import PeopleIcon from "@material-ui/icons/People";
 import Slider from "./Slider";
@@ -90,7 +88,7 @@ class RatingFormFields extends Component<IRatingFormProps> {
               fullWidth
               rowsMax="4"
               margin="normal"
-              value={this.props.pullRequestStore.rating.notes || ''}
+              value={this.props.pullRequestStore.rating.notes || ""}
               onChange={this.changeHandler<"notes">("notes")}
             />
           </Grid>
@@ -130,9 +128,7 @@ class RatingFormFields extends Component<IRatingFormProps> {
               InputLabelProps={{
                 shrink: true
               }}
-              value={
-                this.props.pullRequestStore.rating.remindOnDate || ''
-              }
+              value={this.props.pullRequestStore.rating.remindOnDate || ""}
               onChange={this.changeHandler<"remindOnDate">("remindOnDate")}
             />
           </Grid>

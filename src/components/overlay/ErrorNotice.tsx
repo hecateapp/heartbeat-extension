@@ -1,6 +1,10 @@
 import * as React from "react";
 import PullRequestStore from "../../stores/PullRequestStore";
-import { DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { inject, observer } from "mobx-react";
 
 interface IErrorNoticeProps {

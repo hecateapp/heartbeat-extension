@@ -2,9 +2,10 @@ import * as React from "react";
 import { SFC } from "react";
 
 import Button from "@material-ui/core/Button";
+import Badge from "@material-ui/core/Badge";
+import { withStyles } from "@material-ui/core/styles";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
-import { Badge, withStyles } from "@material-ui/core";
 import PullRequestStore from "../../stores/PullRequestStore";
 import { inject, observer } from "mobx-react";
 

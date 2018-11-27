@@ -1,11 +1,9 @@
 import * as React from "react";
-import {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button
-} from "@material-ui/core";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
 import { inject, observer } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
 import RatingFormFields from "./RatingFormFields";
@@ -40,25 +38,24 @@ class RatingForm extends React.Component<IRatingFormProps> {
             style={{ marginTop: "8px", padding: "8px 0", overflowX: "hidden" }}
           >
             <RatingFormFields />
+            <DialogActions>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={this.props.pullRequestStore.closeModal}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={this.props.pullRequestStore.saveRating}
+              >
+                Save
+              </Button>
+            </DialogActions>
           </div>
         </DialogContent>
-
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={this.props.pullRequestStore.closeModal}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={this.props.pullRequestStore.saveRating}
-          >
-            Save
-          </Button>
-        </DialogActions>
       </React.Fragment>
     );
   }

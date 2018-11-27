@@ -1,8 +1,6 @@
 import * as React from "react";
-import {
-  Dialog,
-  Slide,
-} from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
 import { observer, inject } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
 import RatingForm from "./RatingForm";
