@@ -4,22 +4,27 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@material-ui/core": "^3.5.1",
+    "@material-ui/icons": "^3.0.1",
+    "@material-ui/lab": "^3.0.0-alpha.23",
     "bugsnag-js": "^4.7.3",
     "bugsnag-react": "^1.1.1",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.5",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "styled-components": "^3.4.5"
+    "react-dom": "^16.4.2"
   },
   "devDependencies": {
     "@types/chrome": "0.0.75",
+    "@types/jest": "^23.3.9",
     "@types/react": "16.7.7",
     "@types/react-dom": "16.0.10",
     "awesome-typescript-loader": "5.2.1",
     "copy-webpack-plugin": "4.6.0",
     "generate-json-webpack-plugin": "0.3.1",
+    "jest": "23.6.0",
     "source-map-loader": "0.2.4",
+    "ts-jest": "23.10.4",
     "typescript": "3.1.6",
     "webpack": "4.26.1",
     "webpack-chrome-extension-reloader": "0.8.3",
@@ -27,6 +32,8 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack --config webpack.config.js --mode development --watch",
+    "test": "jest",
+    "build": "webpack --config webpack.config.js --mode production",
     "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
   },
   "author": "",

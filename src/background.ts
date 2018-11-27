@@ -1,75 +1,98 @@
-import { UIRatingMessage, BackgroundRatingMessage } from "./util/types";
-import { ObservableMap } from "mobx";
+
 import { setRating, logView } from "./util/api";
+import Config from "./background/config";
+import Cache, { CacheValue } from "./background/Cache";
+import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, SaveRatingRequest } from "./models/messageTypes";
+import Rating from "./models/Rating";
 
-const prs: ObservableMap<string, number> = new ObservableMap();
-const ports: chrome.runtime.Port[] = []; 
+const config = new Config();
 
-let apiKey: string;
-chrome.storage.sync.get("apiKey", items => {
-  apiKey = items.apiKey;
-});
+function onLoad(
+  messageCallback: (msg: ViewResponse) => void,
+  cachedValue:  CacheValue<Rating>,
+  prPath: string
+) {
+  const rating = cachedValue.get();
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "sync") {
-    if (changes.apiKey) {
-      apiKey = changes.apiKey.newValue;
-    }
+  if (rating) {
+    messageCallback({
+      type: "ViewResponse",
+      rating: rating
+    });
   }
-});
+
+  logView(config.apiKey, prPath)
+    .then(resp => {
+      cachedValue.set(resp.rating);
+      if (!resp.rating) {
+        messageCallback({
+          type: "ViewResponse",
+          rating: null,
+        });
+      }
+    })
+    .catch((reason: Error) => {
+      messageCallback({
+        type: "ViewResponse",
+        rating: cachedValue.get(),
+        error: reason.message,
+      });
+    });
+}
+
+function notifyUpdate(
+  messageCallback: (msg: ObservedRatingUpdateResponse) => void,
+  rating: Rating
+) {
+  messageCallback({ type: "ObservedRatingUpdateResponse", rating: rating });
+}
+
+function receiveUpdate(
+  messageCallback: (msg: SaveRatingResponse) => void,
+  cachedValue: CacheValue<Rating>,
+  msg: SaveRatingRequest
+) {
+  setRating(config.apiKey, msg.prPath, msg.rating)
+    .then(resp => {
+      cachedValue.set(resp.rating);
+    })
+    .catch((reason: Error) => {
+      messageCallback({
+        type: "SaveRatingResponse",
+        error: reason.message,
+      });
+    });
+}
+
+const cache = new Cache<Rating>();
 
 chrome.runtime.onConnect.addListener(port => {
   console.log("New port connected", port.name);
-  ports.push(port);
-  const prPath = port.name;
-  if (!prs.has(prPath)) {
-    prs.set(prPath, null);
+  const key = port.name;
+
+  const messageCallback = (msg: BackgroundMessage) => {
+    port.postMessage(msg);
+  };
+
+  const cachedValue = cache.value(key);
+
+  if (!config.apiKey) {
+    port.postMessage({
+      error: "No API key set"
+    });
   }
 
-  const cancel = prs.observe(change => {
-    if (change.type === "update" && change.name === prPath) {
-      const msg: BackgroundRatingMessage = { rating: change.newValue };
-      port.postMessage(msg);
-    }
+  onLoad(messageCallback, cachedValue, key);
+
+  const cancel = cache.observe(key, newValue => {
+    notifyUpdate(messageCallback, newValue);
   });
+
   port.onDisconnect.addListener(() => {
-    const i = ports.indexOf(port);
-    if (i > -1) {
-      ports.splice(i, 1);
-    }
     cancel();
   });
 
-  port.onMessage.addListener((msg: UIRatingMessage) => {
-    setRating(apiKey, msg.prPath, msg.rating)
-      .then(resp => {
-        prs.set(msg.prPath, resp.rating);
-      })
-      .catch(reason => {
-        const msg: BackgroundRatingMessage = {
-          rating: prs.get(prPath),
-          error: reason
-        };
-        port.postMessage(msg);
-      });
+  port.onMessage.addListener((msg: any) => {
+    receiveUpdate(messageCallback, cachedValue, msg);
   });
-
-  logView(apiKey, prPath)
-    .then(resp => {
-      if (prs.get(prPath) === resp.rating) {
-        const msg: BackgroundRatingMessage = {
-          rating: resp.rating,
-        };
-        port.postMessage(msg);
-      } else {
-        prs.set(prPath, resp.rating);
-      }
-    })
-    .catch(reason => {
-      const msg: BackgroundRatingMessage = {
-        rating: prs.get(prPath),
-        error: reason
-      };
-      port.postMessage(msg);
-    });
 });

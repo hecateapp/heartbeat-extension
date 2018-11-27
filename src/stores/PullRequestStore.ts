@@ -1,56 +1,104 @@
 import { decorate, observable, action, runInAction } from "mobx";
-import { UIRatingMessage, BackgroundRatingMessage } from "../util/types";
-
+import { BackgroundMessage, SaveRatingRequest } from "../models/messageTypes";
+import Rating from "../models/Rating";
 const prPathRegex = /^\/[\w-]+\/[\w-]+\/pull\/\d+/i;
 
 class PullRequestStore {
   private port: chrome.runtime.Port;
 
   public prPath: string;
-  public rating: number | undefined;
+
+  public isModalOpen: boolean = false;
+
+  public rating?: Rating;
+  public serverRating?: Rating;
 
   public requestInProgress: boolean = false;
   public requestError: string | undefined;
 
+  public authError: boolean = false;
+
   public navigateTo(path: string) {
-    console.log("in navigate to with", path)
+    if (this.prPath) {
+      this.prPath = null;
+      this.port.disconnect();
+      this.port = null;
+    }
+
     if (path.match(prPathRegex)) {
-      console.log("definitely a PR");
       this.prPath = path;
       this.requestInProgress = true;
       this.connectPort();
+    }
+  }
+
+  public openModal = () => {
+    this.isModalOpen = true;
+
+    if (this.serverRating) {
+      this.rating = this.serverRating;
     } else {
-      if (this.prPath) {
-        this.prPath = null;
-        this.port.disconnect();
-        this.port = null;
-      }
+      this.rating = new Rating();
     }
+  };
+
+  public closeModal = () => {
+    this.isModalOpen = false;
+    this.rating = null;
+  };
+
+  public saveRating = () => {
+    if (this.rating) {
+      this.requestError = undefined;
+      this.requestInProgress = true;
+
+      this.postMessage({
+        type: "SaveRatingRequest",
+        prPath: this.prPath,
+        rating: this.rating
+      });
+    }
+  };
+
+  public setRatingProperty<K extends keyof Rating>(key: K, value: Rating[K]) {
+    this.rating[key] = value;
   }
 
-  public setRating(rating: number) {
-    this.rating = rating;
-    this.requestError = undefined;
-    this.requestInProgress = true;
-
-    this.postMessage({
-      prPath: this.prPath,
-      rating: this.rating
-    });
-  }
-
-  public ratingCallback(msg: BackgroundRatingMessage) {
-    this.rating = msg.rating;
+  public backgroundMessageCallback(msg: BackgroundMessage) {
+    console.log("Backend message received", msg);
+    switch (msg.type) {
+      case "AuthError":
+        // handle no auth:
+        this.authError = true;
+        break;
+      case "SaveRatingResponse":
+        if (msg.error) {
+          this.requestError = msg.error;
+        }
+        break;
+      case "ObservedRatingUpdateResponse":
+        this.serverRating = msg.rating;
+        if (this.requestInProgress && this.isModalOpen) {
+          this.isModalOpen = false;
+        }
+        break;
+      case "ViewResponse":
+        if (msg.error) {
+          this.requestError = msg.error;
+        } else if (msg.rating) {
+          this.serverRating = msg.rating;
+        }
+        break;
+    }
     this.requestInProgress = false;
-    if (msg.error) {
-      this.requestError = "error saving rating";
-    }
   }
 
   private connectPort() {
     runInAction(() => {
       this.port = chrome.runtime.connect({ name: this.prPath });
-      this.port.onMessage.addListener(this.ratingCallback.bind(this));
+      this.port.onMessage.addListener(
+        this.backgroundMessageCallback.bind(this)
+      );
     });
 
     this.port.onDisconnect.addListener(() => {
@@ -61,7 +109,7 @@ class PullRequestStore {
     });
   }
 
-  private postMessage(msg: UIRatingMessage) {
+  private postMessage(msg: SaveRatingRequest) {
     if (!this.port) {
       this.connectPort();
     }
@@ -72,12 +120,17 @@ class PullRequestStore {
 decorate(PullRequestStore, {
   prPath: observable,
   rating: observable,
+  serverRating: observable,
   requestInProgress: observable,
   requestError: observable,
+  isModalOpen: observable,
 
   navigateTo: action,
-  setRating: action,
-  ratingCallback: action
+  saveRating: action,
+  backgroundMessageCallback: action,
+  openModal: action,
+  closeModal: action,
+  setRatingProperty: action
 });
 
 export default PullRequestStore;

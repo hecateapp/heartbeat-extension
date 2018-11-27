@@ -1,19 +1,22 @@
+import Rating from "../models/Rating";
+
 interface IRequestOptions {
   headers?: object;
   method?: string;
   body?: string;
 }
 
-const apiHost = process.env.NODE_ENV !== "production"
-  ? "http://localhost:4567"
-  : "https://api.hecate.co";
+const apiHost =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:4567"
+    : "https://api.hecate.co";
 
 function fetchJson(
   apiKey: string,
   path: string,
   options: IRequestOptions = {}
 ): Promise<any> {
-  console.log("about to fetch", path);  
+  console.log("about to fetch", path);
   return fetch(`${apiHost}${path}`, {
     ...options,
     headers: {
@@ -33,7 +36,7 @@ function fetchJson(
 export function logView(
   apiKey: string,
   prPath: string
-): Promise<{ rating: number }> {
+): Promise<{ rating: Rating }> {
   return fetchJson(apiKey, "/heartbeat/view", {
     method: "POST",
     body: JSON.stringify({ pr_path: prPath })
@@ -43,8 +46,8 @@ export function logView(
 export function setRating(
   apiKey: string,
   prPath: string,
-  rating: number
-): Promise<{ rating: number }> {
+  rating: Rating
+): Promise<{ rating: Rating }> {
   return fetchJson(apiKey, "/heartbeat/set_rating", {
     method: "POST",
     body: JSON.stringify({ pr_path: prPath, rating: rating })
