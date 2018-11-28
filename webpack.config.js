@@ -14,7 +14,7 @@ plugins.push(new CopyWebpackPlugin([{
 }]));
 
 // Live reloading in dev
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "development") {
     const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
     plugins.push(new ChromeExtensionReloader({
         port: 9090, // Which port use to create the server
