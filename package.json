@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "sideEffects": false,
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
@@ -15,12 +16,17 @@
     "react-dom": "^16.4.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
     "@types/chrome": "0.0.75",
     "@types/jest": "23.3.10",
     "@types/node": "10.12.12",
     "@types/react": "16.7.16",
     "@types/react-dom": "16.0.11",
-    "awesome-typescript-loader": "5.2.1",
+    "babel-loader": "^8.0.4",
     "copy-webpack-plugin": "4.6.0",
     "generate-json-webpack-plugin": "0.3.1",
     "jest": "23.6.0",
@@ -28,12 +34,13 @@
     "ts-jest": "23.10.5",
     "typescript": "3.2.2",
     "webpack": "4.28.3",
-    "webpack-chrome-extension-reloader": "1.0.0",
+    "webpack-chrome-extension-reloader": "1.1.1",
     "webpack-command": "0.4.2"
   },
   "scripts": {
-    "dev": "NODE_ENV=development webpack --config webpack.config.js --mode development --watch",
     "test": "jest",
+    "type-check": "tsc",
+    "dev": "NODE_ENV=development webpack --config webpack.config.js --mode development --watch",
     "build": "webpack --config webpack.config.js --mode production",
     "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
   },

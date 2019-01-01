@@ -5,5 +5,6 @@ test_task:
     folder: node_modules
     fingerprint_script: cat package-lock.json
     populate_script: npm install
+  type_check_script: npm run type-check
   build_script: npm run build
   test_script: npm test
