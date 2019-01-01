@@ -45,5 +45,5 @@
     "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
   },
   "author": "",
-  "license": "ISC"
+  "license": "GPL-3.0"
 }
