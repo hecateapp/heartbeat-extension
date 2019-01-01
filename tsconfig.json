@@ -1,12 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
         "noImplicitAny": true,
-        "module": "commonjs",
-        "target": "es5",
-        "lib": ["es5", "es6", "dom"],
-        "jsx": "react"
+        "target": "es6",
+        "lib": ["es6", "dom"],
+        "jsx": "react",
+        "noEmit": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"
