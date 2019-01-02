@@ -92,46 +92,6 @@ class RatingFormFields extends Component<IRatingFormProps> {
               onChange={this.changeHandler<"notes">("notes")}
             />
           </Grid>
-          <Grid item xs={6} sm={12}>
-            <Typography variant="subtitle1" paragraph={false}>
-              Remind me about this pull request when
-            </Typography>
-          </Grid>
-          <Grid item xs>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="age-simple">Changes state</InputLabel>
-              <Select
-                fullWidth
-                inputProps={{
-                  name: "reminder-state",
-                  id: "reminder-state"
-                }}
-                value={
-                  this.props.pullRequestStore.rating.remindOnState || "None"
-                }
-                onChange={this.changeHandler<"remindOnState">("remindOnState")}
-              >
-                <MenuItem value="None">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="merged">Merges</MenuItem>
-                <MenuItem value="closed">Closes</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs>
-            <TextField
-              id="reminder-date"
-              label="on date"
-              type="date"
-              fullWidth
-              InputLabelProps={{
-                shrink: true
-              }}
-              value={this.props.pullRequestStore.rating.remindOnDate || ""}
-              onChange={this.changeHandler<"remindOnDate">("remindOnDate")}
-            />
-          </Grid>
         </Grid>
       </Fragment>
     );

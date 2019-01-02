@@ -1,14 +1,17 @@
 import * as React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import Slide from "@material-ui/core/Slide";
+import Paper from "@material-ui/core/Paper";
 import { observer, inject } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
 import RatingForm from "./RatingForm";
 import ErrorNotice from "./ErrorNotice";
+import { withStyles } from "@material-ui/core";
 
-function Transition(props: any) {
-  return <Slide direction="left" {...props} />;
-}
+const Dialog = withStyles({
+  root: {
+    maxWidth: "400px",
+    marginRight: "1em"
+  }
+})(Paper);
 
 interface IRatingDialogProps {
   pullRequestStore?: PullRequestStore;
@@ -20,18 +23,21 @@ class RatingDialog extends React.Component<IRatingDialogProps> {
       return null;
     }
 
-    return (
-      <Dialog
-        open={this.props.pullRequestStore.isModalOpen}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={this.props.pullRequestStore.closeModal}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        {this.props.pullRequestStore!.authError ? <ErrorNotice /> : <RatingForm />}
-      </Dialog>
-    );
+    if (this.props.pullRequestStore.isModalOpen) {
+      return (
+        <Dialog
+          elevation={12}
+        >
+          {this.props.pullRequestStore!.authError ? (
+            <ErrorNotice />
+          ) : (
+            <RatingForm />
+          )}
+        </Dialog>
+      );
+    }
+
+    return null;
   }
 }
 

@@ -74,7 +74,11 @@ module.exports = {
                             "@babel/typescript",
                         ],
                         plugins: [
-                            "@babel/plugin-proposal-class-properties"
+                            [
+                                "@babel/plugin-proposal-class-properties", {
+                                    loose: true
+                                }
+                            ]
                         ]
                     }
                 }

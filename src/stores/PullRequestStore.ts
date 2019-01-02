@@ -32,19 +32,28 @@ class PullRequestStore {
     }
   }
 
-  public openModal = () => {
-    this.isModalOpen = true;
-
-    if (this.serverRating) {
-      this.rating = this.serverRating;
+  public toggleModal = () => {
+    if (this.isModalOpen) {
+      this.isModalOpen = false;
     } else {
-      this.rating = new Rating();
+      if (!this.rating) {
+        this.resetRating()
+      }
+      this.isModalOpen = true;
     }
-  };
+  }
 
-  public closeModal = () => {
+  public cancelRating = () => {
     this.isModalOpen = false;
-    this.rating = null;
+    this.resetRating();
+  }
+
+  public resetRating = () => {
+      if (this.serverRating) {
+        this.rating = this.serverRating;
+      } else {
+        this.rating = new Rating();
+      }
   };
 
   public saveRating = () => {
@@ -91,6 +100,7 @@ class PullRequestStore {
         break;
     }
     this.requestInProgress = false;
+    console.log("requestInProgress", this.requestInProgress);
   }
 
   private connectPort() {
@@ -123,13 +133,14 @@ decorate(PullRequestStore, {
   serverRating: observable,
   requestInProgress: observable,
   requestError: observable,
+  authError: observable,
   isModalOpen: observable,
 
   navigateTo: action,
   saveRating: action,
   backgroundMessageCallback: action,
-  openModal: action,
-  closeModal: action,
+  toggleModal: action,
+  cancelRating: action,
   setRatingProperty: action
 });
 
