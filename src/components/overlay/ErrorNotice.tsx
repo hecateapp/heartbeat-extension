@@ -25,7 +25,7 @@ const ErrorNotice: React.SFC<IErrorNoticeProps> = ({pullRequestStore}) => (
           <Button
             color="primary"
             variant="contained"
-            onClick={pullRequestStore!.closeModal}
+            onClick={pullRequestStore!.toggleModal}
           >
             OK
           </Button>
