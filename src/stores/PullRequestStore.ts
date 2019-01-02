@@ -34,26 +34,26 @@ class PullRequestStore {
 
   public toggleModal = () => {
     if (this.isModalOpen) {
-      this.closeModal();
+      this.isModalOpen = false;
     } else {
-      this.openModal();
+      if (!this.rating) {
+        this.resetRating()
+      }
+      this.isModalOpen = true;
     }
   }
 
-  public openModal = () => {
-    this.isModalOpen = true;
+  public cancelRating = () => {
+    this.isModalOpen = false;
+    this.resetRating();
+  }
 
-    if (!this.rating) {
+  public resetRating = () => {
       if (this.serverRating) {
         this.rating = this.serverRating;
       } else {
         this.rating = new Rating();
       }
-    }
-  };
-
-  public closeModal = () => {
-    this.isModalOpen = false;
   };
 
   public saveRating = () => {
@@ -139,8 +139,8 @@ decorate(PullRequestStore, {
   navigateTo: action,
   saveRating: action,
   backgroundMessageCallback: action,
-  openModal: action,
-  closeModal: action,
+  toggleModal: action,
+  cancelRating: action,
   setRatingProperty: action
 });
 
