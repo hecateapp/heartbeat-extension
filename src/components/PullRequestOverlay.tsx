@@ -18,10 +18,14 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
     }
 
     return (
-      <Fragment>
+      <div style={{
+        display: "flex",
+        flexFlow: "column nowrap",
+        alignItems: "flex-end"
+      }}>
         <RatingDialog />
-        <HeartbeatFAB onClick={this.props.pullRequestStore.openModal} />
-      </Fragment>
+        <HeartbeatFAB onClick={this.props.pullRequestStore.toggleModal} />
+      </div>
     );
   }
 }

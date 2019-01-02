@@ -32,19 +32,28 @@ class PullRequestStore {
     }
   }
 
+  public toggleModal = () => {
+    if (this.isModalOpen) {
+      this.closeModal();
+    } else {
+      this.openModal();
+    }
+  }
+
   public openModal = () => {
     this.isModalOpen = true;
 
-    if (this.serverRating) {
-      this.rating = this.serverRating;
-    } else {
-      this.rating = new Rating();
+    if (!this.rating) {
+      if (this.serverRating) {
+        this.rating = this.serverRating;
+      } else {
+        this.rating = new Rating();
+      }
     }
   };
 
   public closeModal = () => {
     this.isModalOpen = false;
-    this.rating = null;
   };
 
   public saveRating = () => {
