@@ -91,6 +91,7 @@ class PullRequestStore {
         break;
     }
     this.requestInProgress = false;
+    console.log("requestInProgress", this.requestInProgress);
   }
 
   private connectPort() {
@@ -123,6 +124,7 @@ decorate(PullRequestStore, {
   serverRating: observable,
   requestInProgress: observable,
   requestError: observable,
+  authError: observable,
   isModalOpen: observable,
 
   navigateTo: action,

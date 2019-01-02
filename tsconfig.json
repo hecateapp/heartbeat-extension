@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
         "noImplicitAny": true,
-        "target": "es6",
-        "module": "commonjs",
+        "target": "esnext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
         "lib": ["es6", "dom"],
         "jsx": "react",
         "noEmit": true,
+        "isolatedModules": true,
         "skipLibCheck": true
     },
     "include": [
