@@ -103,7 +103,6 @@ class PullRequestStore {
         break;
     }
     this.requestInProgress = false;
-    console.log("requestInProgress", this.requestInProgress);
   }
 
   private connectPort() {

@@ -30,7 +30,6 @@ class RatingFormFields extends Component<IRatingFormProps> {
     key: "outcomeScore" | "processScore"
   ): (event: React.ChangeEvent, value: number) => void {
     return (event, value) => {
-      console.log("newSliderValue", key, value)
       this.props.pullRequestStore.setRatingProperty<
         "outcomeScore" | "processScore"
       >(key, value);

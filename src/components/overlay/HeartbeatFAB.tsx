@@ -26,7 +26,6 @@ class HeartbeatFAB extends React.Component<IHeartbeatFABProps> {
       return null;
     }
 
-    console.log("render", this.props.pullRequestStore.requestInProgress);
     let icon = <FavoriteBorderIcon fontSize="large" />;
 
     if (

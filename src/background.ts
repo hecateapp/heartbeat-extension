@@ -29,7 +29,6 @@ function onLoad(
 
   logView(config.apiKey, prPath)
     .then(resp => {
-      console.log(resp);
       cachedValue.set(resp.rating);
 
       messageCallback({
