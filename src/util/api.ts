@@ -16,7 +16,7 @@ function fetchJson(
   path: string,
   options: IRequestOptions = {}
 ): Promise<any> {
-  console.log("about to fetch", apiHost, path);
+  console.log("about to fetch", apiHost, path, options);
   return fetch(`${apiHost}${path}`, {
     ...options,
     headers: {

@@ -3,10 +3,6 @@ import { Component, Fragment } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import BuildIcon from "@material-ui/icons/Build";
 import PeopleIcon from "@material-ui/icons/People";
 import Slider from "./Slider";
@@ -34,6 +30,7 @@ class RatingFormFields extends Component<IRatingFormProps> {
     key: "outcomeScore" | "processScore"
   ): (event: React.ChangeEvent, value: number) => void {
     return (event, value) => {
+      console.log("newSliderValue", key, value)
       this.props.pullRequestStore.setRatingProperty<
         "outcomeScore" | "processScore"
       >(key, value);
@@ -54,20 +51,38 @@ class RatingFormFields extends Component<IRatingFormProps> {
             </Typography>
           </Grid>
           <Grid item xs>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <BuildIcon />
+              <Typography
+                variant="subtitle1"
+                component="span"
+                style={{ marginLeft: "1.2em" }}
+              >
+                Outcome
+              </Typography>
+            </div>
             <Slider
               value={this.props.pullRequestStore.rating.outcomeScore}
               onChange={this.changeSlider("outcomeScore")}
-            >
-              <BuildIcon fontSize="large" />
-            </Slider>
+              key={this.props.pullRequestStore.rating.outcomeScore}
+            />
           </Grid>
           <Grid item xs>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <PeopleIcon />
+              <Typography
+                variant="subtitle1"
+                component="span"
+                style={{ marginLeft: "1.2em" }}
+              >
+                Process
+              </Typography>
+            </div>
             <Slider
               value={this.props.pullRequestStore.rating.processScore}
               onChange={this.changeSlider("processScore")}
-            >
-              <PeopleIcon fontSize="large" />
-            </Slider>
+              key={this.props.pullRequestStore.rating.processScore}
+            />
           </Grid>
           {/* <Grid item xs={6} sm={12}>
             <TextField

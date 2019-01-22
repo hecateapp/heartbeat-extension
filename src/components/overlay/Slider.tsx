@@ -1,25 +1,105 @@
 import * as React from "react";
-import { SFC, ReactChild } from "react";
-import MuiSlider from "@material-ui/lab/Slider";
-import { withStyles } from "@material-ui/core/styles";
 
 interface ISliderProps {
-  children: ReactChild;
-  value: number;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>, value: number) => void;
+  value?: number;
+  onChange: (event: React.ChangeEvent<Element>, value: number) => void;
 }
 
-const StyledSlider = withStyles({
-  root: {
-    padding: "22px 0"
-  }
-})(MuiSlider);
+interface ISliderState {
+  percentage?: number;
+  clicked: boolean;
+}
 
-const Slider: SFC<ISliderProps> = ({ children, onChange, value }) => (
-  <React.Fragment>
-    {children}
-    <StyledSlider min={-3} max={3} step={1} value={value} onChange={onChange} />
-  </React.Fragment>
-);
+class Slider extends React.Component<ISliderProps, ISliderState> {
+  constructor(props: ISliderProps) {
+    super(props);
+    if (props.value) {
+      this.state = {
+        percentage: parseFloat(props.value.toString()) * 25 + 50,
+        clicked: true
+      };
+    } else {
+      this.state = {
+        clicked: false
+      };
+    }
+  }
+
+  score(val?: number) {
+    const percentage = val || this.state.percentage;
+    if (percentage) {
+      const shifted = percentage - 50;
+      const clamped = shifted / 25;
+      return clamped;
+    }
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          position: "relative",
+          display: "inline-block",
+          overflow: "hidden"
+        }}
+      >
+        <div
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            height: "100%",
+            right: 0,
+            backgroundColor: "white",
+            opacity: 0.6,
+            width: `${
+              this.state.percentage ? 100 - this.state.percentage : 100
+            }%`
+          }}
+        />
+        <div
+          style={{
+            display: "inline-block",
+            cursor: "pointer",
+            fontSize: "1.8em"
+          }}
+          onMouseMove={this.mouseMove}
+          onClick={this.lockItIn}
+        >
+          😬😒😐😊🤩
+        </div>
+      </div>
+    );
+  }
+
+  percentage(e: any) {
+    const boundingRect: DOMRect = e.target.getBoundingClientRect();
+    const x = e.clientX - boundingRect.x;
+    const width = boundingRect.width;
+
+    const percentage = Math.max(
+      0,
+      Math.min(100, Math.round((x / width) * 100))
+    );
+
+    return percentage;
+  }
+
+  mouseMove = (e: any) => {
+    if (this.state.clicked) {
+      return;
+    }
+
+    const percentage = this.percentage(e);
+    if (percentage !== this.state.percentage) {
+      this.setState({ percentage });
+    }
+  };
+
+  lockItIn = (e: any) => {
+    const percentage = this.percentage(e);
+    this.props.onChange(e, this.score(percentage));
+    this.setState({ clicked: true, percentage });
+  };
+}
 
 export default Slider;
