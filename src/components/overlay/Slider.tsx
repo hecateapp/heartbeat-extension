@@ -40,7 +40,8 @@ class Slider extends React.Component<ISliderProps, ISliderState> {
         style={{
           position: "relative",
           display: "inline-block",
-          overflow: "hidden"
+          overflow: "hidden",
+          marginTop: "0.4em"
         }}
       >
         <div

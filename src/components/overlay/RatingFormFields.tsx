@@ -75,7 +75,7 @@ class RatingFormFields extends Component<IRatingFormProps> {
                 component="span"
                 style={{ marginLeft: "1.2em" }}
               >
-                Process
+                Collaboration
               </Typography>
             </div>
             <Slider
