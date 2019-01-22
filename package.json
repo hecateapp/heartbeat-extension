@@ -1,6 +1,6 @@
 {
   "name": "heartbeat-extension",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "sideEffects": false,
@@ -44,6 +44,6 @@
     "build": "webpack --config webpack.config.js --mode production",
     "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
   },
-  "author": "",
+  "author": "Hecate Software Pty Ltd",
   "license": "GPL-3.0"
 }
