@@ -1,15 +1,21 @@
-
+``;
 import { setRating, logView } from "./util/api";
 import Config from "./background/config";
 import Cache, { CacheValue } from "./background/Cache";
-import { ViewResponse, ObservedRatingUpdateResponse, SaveRatingResponse, BackgroundMessage, SaveRatingRequest } from "./models/messageTypes";
+import {
+  ViewResponse,
+  ObservedRatingUpdateResponse,
+  SaveRatingResponse,
+  BackgroundMessage,
+  SaveRatingRequest
+} from "./models/messageTypes";
 import Rating from "./models/Rating";
 
 const config = new Config();
 
 function onLoad(
   messageCallback: (msg: ViewResponse) => void,
-  cachedValue:  CacheValue<Rating>,
+  cachedValue: CacheValue<Rating>,
   prPath: string
 ) {
   const rating = cachedValue.get();
@@ -24,18 +30,17 @@ function onLoad(
   logView(config.apiKey, prPath)
     .then(resp => {
       cachedValue.set(resp.rating);
-      if (!resp.rating) {
-        messageCallback({
-          type: "ViewResponse",
-          rating: null,
-        });
-      }
+
+      messageCallback({
+        type: "ViewResponse",
+        rating: resp.rating
+      });
     })
     .catch((reason: Error) => {
       messageCallback({
         type: "ViewResponse",
         rating: cachedValue.get(),
-        error: reason.message,
+        error: reason.message
       });
     });
 }
@@ -59,7 +64,7 @@ function receiveUpdate(
     .catch((reason: Error) => {
       messageCallback({
         type: "SaveRatingResponse",
-        error: reason.message,
+        error: reason.message
       });
     });
 }

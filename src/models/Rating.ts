@@ -1,8 +1,8 @@
 import { decorate, observable } from "mobx";
 
 class Rating {
-    public outcomeScore: number = 0;
-    public processScore: number = 0;
+    public outcomeScore?: number;
+    public processScore?: number;
     public labels: string[] = [];
     public notes?: string;
     public remindOnDate?: string; // TODO make date?

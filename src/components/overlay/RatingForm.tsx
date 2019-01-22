@@ -20,9 +20,7 @@ class RatingForm extends React.Component<IRatingFormProps> {
         <Typography variant="h5" gutterBottom>Hecate Heartbeat</Typography>
         <Typography variant="body2">
           Rate this pull request for both the quality of the outcome and the
-          quality of the collaboration. Leave the slider in the centre for a
-          neutral rating, push to the right for positive, and to the left for
-          negative.
+          quality of the collaboration by clicking on the emojis below. 
         </Typography>
         {this.props.pullRequestStore!.requestError && (
           <Typography variant="body2" color="error">

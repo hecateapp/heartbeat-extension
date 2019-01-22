@@ -96,11 +96,13 @@ class PullRequestStore {
           this.requestError = msg.error;
         } else if (msg.rating) {
           this.serverRating = msg.rating;
+          if (this.requestInProgress) {
+            this.rating = this.serverRating;
+          }
         }
         break;
     }
     this.requestInProgress = false;
-    console.log("requestInProgress", this.requestInProgress);
   }
 
   private connectPort() {
