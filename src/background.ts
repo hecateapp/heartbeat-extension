@@ -11,14 +11,9 @@ import {
 
 const config = new Config();
 
-const apiHost =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:4567"
-    : "https://api.hecate.co";
-
 const apiConfig = new Configuration({
   apiKey: () => `Token token="${config.apiKey}"`,
-  basePath: apiHost
+  basePath: config.apiBasePath
 });
 const defaultApi = new DefaultApi(apiConfig);
 

@@ -1,6 +1,7 @@
 import * as React from "react";
-import { testToken } from "../util/api";
 import BugsnagReporter from "./BugsnagReporter";
+import { DefaultApi, Configuration } from "../generated/api";
+import Config from "../background/config";
 
 interface ISettingsState {
   apiTokenStatus: string | undefined;
@@ -18,12 +19,25 @@ export default class Settings extends React.Component<{}, ISettingsState> {
     };
   }
 
+  private testToken(newApiKey: string) {
+    // TODO extract this somewhere shared
+    const config = new Config();
+    config.apiKey = newApiKey;
+
+    const apiConfig = new Configuration({
+      apiKey: () => `Token token="${config.apiKey}"`,
+      basePath: config.apiBasePath
+    });
+    const defaultApi = new DefaultApi(apiConfig);
+
+    return defaultApi.helo();
+  }
+
   private handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const newApiKey = this.apiKeyInput.value;
-    testToken(newApiKey)
+    this.testToken(newApiKey)
       .then(() => {
-        chrome.storage.sync.set({ apiKey: newApiKey });
         this.setState({ apiTokenStatus: "Success!" });
       })
       .catch(() => {
@@ -44,7 +58,7 @@ export default class Settings extends React.Component<{}, ISettingsState> {
           <h3>Settings</h3>
           <div>
             <label>
-              API Key
+              API Key{" "}
               <input
                 name="apiKey"
                 type="text"
