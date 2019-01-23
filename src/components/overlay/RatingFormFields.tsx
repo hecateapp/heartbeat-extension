@@ -8,7 +8,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import Slider from "./Slider";
 import { inject, observer } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";
-import Rating from "../../models/Rating";
+import { Rating } from "../../generated/api";
 
 interface IRatingFormProps {
   pullRequestStore?: PullRequestStore;
@@ -28,7 +28,7 @@ class RatingFormFields extends Component<IRatingFormProps> {
 
   private changeSlider(
     key: "outcomeScore" | "processScore"
-  ): (event: React.ChangeEvent, value: number) => void {
+  ): (event: React.ChangeEvent, value: string) => void {
     return (event, value) => {
       this.props.pullRequestStore.setRatingProperty<
         "outcomeScore" | "processScore"
