@@ -12,6 +12,7 @@
     "bugsnag-react": "^1.1.1",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.5",
+    "portable-fetch": "^3.0.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2"
   },

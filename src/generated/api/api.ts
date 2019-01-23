@@ -137,13 +137,13 @@ export interface Rating {
      * @type {string}
      * @memberof Rating
      */
-    outcomeScore: string;
+    outcomeScore?: string;
     /**
      *
      * @type {string}
      * @memberof Rating
      */
-    processScore: string;
+    processScore?: string;
     /**
      *
      * @type {string}
