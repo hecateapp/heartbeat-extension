@@ -1,6 +1,7 @@
 import { decorate, observable, action, runInAction } from "mobx";
 import { BackgroundMessage, SaveRatingRequest } from "../models/messageTypes";
-import Rating from "../models/Rating";
+import { Rating } from "../generated/api";
+
 const prPathRegex = /^\/[\w-]+\/[\w-]+\/pull\/\d+/i;
 
 class PullRequestStore {
@@ -52,7 +53,11 @@ class PullRequestStore {
       if (this.serverRating) {
         this.rating = this.serverRating;
       } else {
-        this.rating = new Rating();
+        this.rating = {
+          prPath: this.prPath,
+          outcomeScore: undefined,
+          processScore: undefined,
+        }
       }
   };
 

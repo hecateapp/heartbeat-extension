@@ -1,5 +1,4 @@
-``;
-import { setRating, logView } from "./util/api";
+import { DefaultApi, Configuration, Rating, ApiError } from "./generated/api";
 import Config from "./background/config";
 import Cache, { CacheValue } from "./background/Cache";
 import {
@@ -9,9 +8,19 @@ import {
   BackgroundMessage,
   SaveRatingRequest
 } from "./models/messageTypes";
-import Rating from "./models/Rating";
 
 const config = new Config();
+
+const apiHost =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:4567"
+    : "https://api.hecate.co";
+
+const apiConfig = new Configuration({
+  apiKey: () => `Token token="${config.apiKey}"`,
+  basePath: apiHost
+});
+const defaultApi = new DefaultApi(apiConfig);
 
 function onLoad(
   messageCallback: (msg: ViewResponse) => void,
@@ -27,7 +36,8 @@ function onLoad(
     });
   }
 
-  logView(config.apiKey, prPath)
+  defaultApi
+    .view({ prPath })
     .then(resp => {
       cachedValue.set(resp.rating);
 
@@ -36,11 +46,14 @@ function onLoad(
         rating: resp.rating
       });
     })
-    .catch((reason: Error) => {
-      messageCallback({
-        type: "ViewResponse",
-        rating: cachedValue.get(),
-        error: reason.message
+    .catch((resp: Response) => {
+      console.log("view error", resp);
+      resp.json().then((error: ApiError) => {
+        messageCallback({
+          type: "ViewResponse",
+          rating: cachedValue.get(),
+          error: error.error
+        });
       });
     });
 }
@@ -57,14 +70,18 @@ function receiveUpdate(
   cachedValue: CacheValue<Rating>,
   msg: SaveRatingRequest
 ) {
-  setRating(config.apiKey, msg.prPath, msg.rating)
+  defaultApi
+    .setRating({ prPath: msg.prPath, ...msg.rating })
     .then(resp => {
-      cachedValue.set(resp.rating);
+      cachedValue.set(resp);
     })
-    .catch((reason: Error) => {
-      messageCallback({
-        type: "SaveRatingResponse",
-        error: reason.message
+    .catch((resp: Response) => {
+      console.log("setRating error", resp);
+      resp.json().then((error: ApiError) => {
+        messageCallback({
+          type: "SaveRatingResponse",
+          error: error.error
+        });
       });
     });
 }
