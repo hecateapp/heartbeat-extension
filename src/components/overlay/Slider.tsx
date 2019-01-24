@@ -1,8 +1,8 @@
 import * as React from "react";
 
 interface ISliderProps {
-  value?: number;
-  onChange: (event: React.ChangeEvent<Element>, value: number) => void;
+  value?: string;
+  onChange: (event: React.ChangeEvent<Element>, value: string) => void;
 }
 
 interface ISliderState {
@@ -15,7 +15,7 @@ class Slider extends React.Component<ISliderProps, ISliderState> {
     super(props);
     if (props.value) {
       this.state = {
-        percentage: parseFloat(props.value.toString()) * 25 + 50,
+        percentage: parseFloat(props.value) * 25 + 50,
         clicked: true
       };
     } else {
@@ -98,7 +98,8 @@ class Slider extends React.Component<ISliderProps, ISliderState> {
 
   lockItIn = (e: any) => {
     const percentage = this.percentage(e);
-    this.props.onChange(e, this.score(percentage));
+    const value = this.score(percentage).toFixed(2);
+    this.props.onChange(e, value);
     this.setState({ clicked: true, percentage });
   };
 }
