@@ -113,3 +113,34 @@ chrome.runtime.onConnect.addListener(port => {
     receiveUpdate(messageCallback, cachedValue, msg);
   });
 });
+
+// Synchronous message handling for simple messages
+// Right now, just the installation check.
+chrome.runtime.onMessageExternal.addListener((message, sender, responder) => {
+  console.log("message received from react-app", message, sender);
+  if (message.type === "InstallationCheck") {
+    responder({ installed: true });
+  } else {
+    console.log("unexpected message from hecate site", message, sender);
+  }
+});
+
+// Async external messages for doing configuration from website
+chrome.runtime.onConnectExternal.addListener(port => {
+  port.onMessage.addListener((message, p) => {
+    if (message.type === "SetConfiguration") {
+      config.apiKey = message.apiKey;
+      defaultApi
+        .helo()
+        .then(() => {
+          console.log("all ok");
+          p.postMessage({ configured: true });
+        })
+        .catch(e => {
+          p.postMessage({ installationError: e });
+        });
+    } else {
+      console.log("unexpected message from hecate site", message, p.sender);
+    }
+  });
+});
