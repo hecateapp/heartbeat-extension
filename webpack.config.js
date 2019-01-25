@@ -31,10 +31,10 @@ const manifestTemplate = require(path.join(__dirname, 'manifest.json'));
 manifestTemplate.version = packageVersion;
 if (process.env.NODE_ENV === "production") {
     manifestTemplate.permissions.push("https://*.hecate.co/");
-    manifestTemplate.externally_connectable.matches.push("https://app.hecate.co/")
+    manifestTemplate.externally_connectable.matches.push("https://app.hecate.co/*")
 } else {
     manifestTemplate.permissions.push("http://localhost:4567/");
-    manifestTemplate.externally_connectable.matches.push("https://localhost:4567/")
+    manifestTemplate.externally_connectable.matches.push("http://localhost:3000/*")
 }
 plugins.push(new GenerateJsonPlugin('manifest.json', manifestTemplate));
 
