@@ -1,5 +1,5 @@
 import bugsnagClient from "../util/bugsnagClient";
-import * as React from "react";
+import React from "react";
 import createPlugin from "bugsnag-react";
 
 const ErrorBoundary = bugsnagClient.use(createPlugin(React));

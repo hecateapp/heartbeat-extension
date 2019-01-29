@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import { observer, inject } from "mobx-react";
 import PullRequestStore from "../../stores/PullRequestStore";

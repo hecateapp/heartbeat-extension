@@ -8,6 +8,7 @@ import {
   BackgroundMessage,
   SaveRatingRequest
 } from "./models/messageTypes";
+import bugsnagClient from "./util/bugsnagClient";
 
 const config = new Config();
 
@@ -81,6 +82,45 @@ function receiveUpdate(
     });
 }
 
+function handleError(error: Error | null, info: any) {
+  const BugsnagReport = bugsnagClient.BugsnagReport;
+
+  const handledState = {
+    severity: "error",
+    unhandled: true,
+    severityReason: { type: "unhandledException" }
+  };
+
+  // scrub the stacktrace of reference to chrome so it gets reported
+  let stacktrace = BugsnagReport.getStacktrace(error);
+  stacktrace = stacktrace.map(function(frame) {
+    frame.file = frame.file.replace(/chrome-extension:/g, "keepinghrome:");
+    return frame;
+  });
+
+  // Tidy up the componentStack to look nice in bugsnag
+  if (info && info.componentStack) {
+    const lines: string[] = info.componentStack.split(/\s*\n\s*/g);
+    let componentStack = "";
+    for (let line of lines) {
+      if (line.length) {
+        componentStack += `${componentStack.length ? "\n" : ""}${line}`;
+      }
+    }
+    info.componentStack = componentStack;
+  }
+
+  const report = new BugsnagReport(
+    error.name,
+    error.message,
+    BugsnagReport.getStacktrace(error),
+    handledState
+  );
+  report.updateMetaData("react", info);
+
+  bugsnagClient.notify(report);
+}
+
 const cache = new Cache<Rating>();
 
 chrome.runtime.onConnect.addListener(port => {
@@ -110,6 +150,52 @@ chrome.runtime.onConnect.addListener(port => {
   });
 
   port.onMessage.addListener((msg: any) => {
-    receiveUpdate(messageCallback, cachedValue, msg);
+    if (msg.type === "UnhandledError") {
+      handleError(msg.error, msg.info);
+    } else {
+      receiveUpdate(messageCallback, cachedValue, msg);
+    }
   });
 });
+
+// Synchronous message handling for simple messages
+// Right now, just the installation check.
+chrome.runtime.onMessageExternal.addListener((message, sender, responder) => {
+  console.log("message received from react-app", message, sender);
+  if (message.type === "InstallationCheck") {
+    responder({ installed: true });
+  } else {
+    console.log("unexpected message from hecate site", message, sender);
+  }
+});
+
+// Async external messages for doing configuration from website
+chrome.runtime.onConnectExternal.addListener(port => {
+  port.onMessage.addListener((message, p) => {
+    if (message.type === "SetConfiguration") {
+      config.apiKey = message.apiKey;
+      defaultApi
+        .helo()
+        .then(() => {
+          console.log("all ok");
+          p.postMessage({ configured: true });
+        })
+        .catch(e => {
+          p.postMessage({ installationError: e });
+        });
+    } else {
+      console.log("unexpected message from hecate site", message, p.sender);
+    }
+  });
+});
+
+// Post install setup
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === "install") {
+    chrome.tabs.create({
+      url: "https://app.hecate.co/heartbeat"
+    });
+  } else if (details.reason === "update") {
+    // TODO add upgrade notes
+  }
+})
