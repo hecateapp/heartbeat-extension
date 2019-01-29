@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
 import HeartbeatFAB from "./overlay/HeartbeatFAB";
@@ -18,11 +17,13 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
     }
 
     return (
-      <div style={{
-        display: "flex",
-        flexFlow: "column nowrap",
-        alignItems: "flex-end"
-      }}>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "column nowrap",
+          alignItems: "flex-end"
+        }}
+      >
         <RatingDialog />
         <HeartbeatFAB onClick={this.props.pullRequestStore.toggleModal} />
       </div>

@@ -38,27 +38,27 @@ class PullRequestStore {
       this.isModalOpen = false;
     } else {
       if (!this.rating) {
-        this.resetRating()
+        this.resetRating();
       }
       this.isModalOpen = true;
     }
-  }
+  };
 
   public cancelRating = () => {
     this.isModalOpen = false;
     this.resetRating();
-  }
+  };
 
   public resetRating = () => {
-      if (this.serverRating) {
-        this.rating = this.serverRating;
-      } else {
-        this.rating = {
-          prPath: this.prPath,
-          outcomeScore: undefined,
-          processScore: undefined,
-        }
-      }
+    if (this.serverRating) {
+      this.rating = this.serverRating;
+    } else {
+      this.rating = {
+        prPath: this.prPath,
+        outcomeScore: undefined,
+        processScore: undefined
+      };
+    }
   };
 
   public saveRating = () => {

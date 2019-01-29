@@ -1,16 +1,10 @@
-import * as React from "react";
+import React from "react";
 import * as ReactDOM from "react-dom";
 
 import { Provider as MobxProvider } from "mobx-react";
 import { configure as configureMobx } from "mobx";
 
-import { create } from "jss";
-import {
-  createGenerateClassName,
-  jssPreset,
-  MuiThemeProvider,
-  createMuiTheme
-} from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 const styleNode = document.createComment("jss-insertion-point");
 document.head.insertBefore(styleNode, document.head.firstChild);
