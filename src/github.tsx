@@ -18,7 +18,6 @@ document.head.insertBefore(styleNode, document.head.firstChild);
 import PullRequestStore from "./stores/PullRequestStore";
 
 import PullRequestOverlay from "./components/PullRequestOverlay";
-import BugsnagReporter from "./components/BugsnagReporter";
 
 const pullRequestStore = new PullRequestStore();
 
@@ -52,13 +51,11 @@ div.style.right = "0";
 div.style.zIndex = "90210";
 
 ReactDOM.render(
-  <BugsnagReporter>
-    <MobxProvider {...stores}>
-      <MuiThemeProvider theme={theme}>
-        <PullRequestOverlay />
-      </MuiThemeProvider>
-    </MobxProvider>
-  </BugsnagReporter>,
+  <MobxProvider {...stores}>
+    <MuiThemeProvider theme={theme}>
+      <PullRequestOverlay />
+    </MuiThemeProvider>
+  </MobxProvider>,
   div
 );
 

@@ -8,6 +8,7 @@ import {
   BackgroundMessage,
   SaveRatingRequest
 } from "./models/messageTypes";
+import bugsnagClient from "./util/bugsnagClient";
 
 const config = new Config();
 
@@ -81,6 +82,45 @@ function receiveUpdate(
     });
 }
 
+function handleError(error: Error | null, info: any) {
+  const BugsnagReport = bugsnagClient.BugsnagReport;
+
+  const handledState = {
+    severity: "error",
+    unhandled: true,
+    severityReason: { type: "unhandledException" }
+  };
+
+  // scrub the stacktrace of reference to chrome so it gets reported
+  let stacktrace = BugsnagReport.getStacktrace(error);
+  stacktrace = stacktrace.map(function(frame) {
+    frame.file = frame.file.replace(/chrome-extension:/g, "keepinghrome:");
+    return frame;
+  });
+
+  // Tidy up the componentStack to look nice in bugsnag
+  if (info && info.componentStack) {
+    const lines: string[] = info.componentStack.split(/\s*\n\s*/g);
+    let componentStack = "";
+    for (let line of lines) {
+      if (line.length) {
+        componentStack += `${componentStack.length ? "\n" : ""}${line}`;
+      }
+    }
+    info.componentStack = componentStack;
+  }
+
+  const report = new BugsnagReport(
+    error.name,
+    error.message,
+    BugsnagReport.getStacktrace(error),
+    handledState
+  );
+  report.updateMetaData("react", info);
+
+  bugsnagClient.notify(report);
+}
+
 const cache = new Cache<Rating>();
 
 chrome.runtime.onConnect.addListener(port => {
@@ -110,7 +150,11 @@ chrome.runtime.onConnect.addListener(port => {
   });
 
   port.onMessage.addListener((msg: any) => {
-    receiveUpdate(messageCallback, cachedValue, msg);
+    if (msg.type === "UnhandledError") {
+      handleError(msg.error, msg.info);
+    } else {
+      receiveUpdate(messageCallback, cachedValue, msg);
+    }
   });
 });
 
