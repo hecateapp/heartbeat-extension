@@ -188,3 +188,14 @@ chrome.runtime.onConnectExternal.addListener(port => {
     }
   });
 });
+
+// Post install setup
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === "install") {
+    chrome.tabs.create({
+      url: "https://app.hecate.co/heartbeat"
+    });
+  } else if (details.reason === "update") {
+    // TODO add upgrade notes
+  }
+})
