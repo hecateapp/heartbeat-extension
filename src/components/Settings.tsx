@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import BugsnagReporter from "./BugsnagReporter";
 import { DefaultApi, Configuration } from "../generated/api";
 import Config from "../background/config";
