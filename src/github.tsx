@@ -1,5 +1,5 @@
 import React from "react";
-import * as ReactDOM from "react-dom";
+import ReactDOM from "react-dom";
 
 import { Provider as MobxProvider } from "mobx-react";
 import { configure as configureMobx } from "mobx";
