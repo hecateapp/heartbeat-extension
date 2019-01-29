@@ -110,6 +110,17 @@ class PullRequestStore {
     this.requestInProgress = false;
   }
 
+  public notifyError(error: Error, info: any) {
+    if (!this.port) {
+      this.connectPort();
+    }
+    this.port.postMessage({
+      type: "UnhandledError",
+      error,
+      info
+    });
+  }
+
   private connectPort() {
     runInAction(() => {
       this.port = chrome.runtime.connect({ name: this.prPath });

@@ -28,6 +28,12 @@ class PullRequestOverlay extends React.Component<IPullRequestOverlayProps> {
       </div>
     );
   }
+
+  public componentDidCatch(error: Error | null, info: any) {
+    if (this.props.pullRequestStore) {
+      this.props.pullRequestStore.notifyError(error, info);
+    }
+  }
 }
 
 export default inject("pullRequestStore")(observer(PullRequestOverlay));
