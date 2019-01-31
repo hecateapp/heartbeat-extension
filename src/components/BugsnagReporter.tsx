@@ -1,8 +1,11 @@
 import bugsnagClient from "../util/bugsnagClient";
 import React from "react";
-import createPlugin from "bugsnag-react";
+import bugsnagReact from "@bugsnag/plugin-react";
 
-const ErrorBoundary = bugsnagClient.use(createPlugin(React));
+bugsnagClient.use(bugsnagReact, React);
+
+const ErrorBoundary = bugsnagClient.getPlugin("react");
+
 
 const BugsnagReporter: React.SFC = ({ children }) => (
   <ErrorBoundary>{children}</ErrorBoundary>
