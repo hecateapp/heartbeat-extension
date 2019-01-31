@@ -1,7 +1,6 @@
 // initialize bugsnag ASAP, before other imports
-import bugsnag from "bugsnag-js";
-import { IConfig } from "bugsnag-js/types/common";
-import Report from "bugsnag-js/types/report";
+import bugsnag from "@bugsnag/js";
+import { Report, IConfig } from "@bugsnag/browser/dist/types/bugsnag-core";
 
 // Hack from https://docs.bugsnag.com/platforms/browsers/faq/#how-can-i-get-error-reports-from-browser-extensions
 function beforeSend(report: Report) {
