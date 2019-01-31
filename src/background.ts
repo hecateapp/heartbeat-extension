@@ -42,15 +42,26 @@ function onLoad(
         rating: resp.rating
       });
     })
-    .catch((resp: Response) => {
-      console.log("view error", resp);
-      resp.json().then((error: ApiError) => {
-        messageCallback({
-          type: "ViewResponse",
-          rating: cachedValue.get(),
-          error: error.error
+    .catch((e: Response | Error) => {
+      console.log("view error", e);
+      const resp = e as Response;
+      const error = e as Error;
+      if (resp.json) {
+        resp.json().then((error: ApiError) => {
+          messageCallback({
+            type: "ViewResponse",
+            rating: cachedValue.get(),
+            error: error.error
+          });
         });
-      });
+      } else if (error.message) {
+        if (error.message === "Attempting to use a disconnected port object") {
+          // race condition where message is received after the port closed
+          // (ie the github tab is closed)
+        } else {
+          throw error;
+        }
+      }
     });
 }
 
