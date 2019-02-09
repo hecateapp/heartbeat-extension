@@ -43,7 +43,7 @@
     "type-check": "tsc",
     "dev": "NODE_ENV=development webpack --config webpack.config.js --mode development --watch",
     "build": "webpack --config webpack.config.js --mode production",
-    "release": "NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
+    "release": "rm -rf dist/ && NODE_ENV=production webpack --config webpack.config.js --mode production && zip -jr release.zip dist/*"
   },
   "author": "Hecate Software Pty Ltd",
   "license": "GPL-3.0"
