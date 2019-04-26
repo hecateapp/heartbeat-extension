@@ -34,7 +34,7 @@
     "source-map-loader": "0.2.4",
     "ts-jest": "24.0.0",
     "typescript": "3.2.4",
-    "webpack": "4.29.5",
+    "webpack": "4.30.0",
     "webpack-chrome-extension-reloader": "1.1.2",
     "webpack-command": "0.4.2"
   },
