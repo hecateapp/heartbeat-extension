@@ -30,7 +30,7 @@
     "babel-loader": "8.0.5",
     "copy-webpack-plugin": "5.0.3",
     "generate-json-webpack-plugin": "0.3.1",
-    "jest": "24.1.0",
+    "jest": "24.7.1",
     "source-map-loader": "0.2.4",
     "ts-jest": "24.0.2",
     "typescript": "3.2.4",
