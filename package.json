@@ -28,7 +28,7 @@
     "@types/react": "16.8.14",
     "@types/react-dom": "16.8.4",
     "babel-loader": "8.0.5",
-    "copy-webpack-plugin": "5.0.0",
+    "copy-webpack-plugin": "5.0.3",
     "generate-json-webpack-plugin": "0.3.1",
     "jest": "24.1.0",
     "source-map-loader": "0.2.4",
