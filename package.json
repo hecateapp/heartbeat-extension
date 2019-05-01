@@ -32,7 +32,7 @@
     "generate-json-webpack-plugin": "0.3.1",
     "jest": "24.1.0",
     "source-map-loader": "0.2.4",
-    "ts-jest": "24.0.0",
+    "ts-jest": "24.0.2",
     "typescript": "3.2.4",
     "webpack": "4.30.0",
     "webpack-chrome-extension-reloader": "1.1.2",
