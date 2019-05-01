@@ -1,6 +1,6 @@
 {
   "name": "heartbeat-extension",
-  "version": "v0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "index.js",
   "sideEffects": false,

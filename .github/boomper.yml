@@ -1,3 +1,0 @@
-updates:
-- path: package.json
-  pattern: '"version": "(.*)"'
