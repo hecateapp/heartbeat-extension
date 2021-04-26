@@ -5,8 +5,8 @@
   "main": "index.js",
   "sideEffects": false,
   "dependencies": {
-    "@bugsnag/js": "6.4.0",
-    "@bugsnag/plugin-react": "6.4.0",
+    "@bugsnag/js": "7.9.2",
+    "@bugsnag/plugin-react": "7.9.2",
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.23",
